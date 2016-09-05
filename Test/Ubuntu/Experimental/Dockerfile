@@ -57,7 +57,11 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 RUN apt-get update -y && apt-get install -y \
     build-essential \
     git \
-    cvs
+    cvs \
+    fort77 \
+    gcc \
+    g++ \
+    gfortran \
 
 # Downloading all source codes
 WORKDIR $PSRHOME
@@ -72,10 +76,10 @@ ENV F77 gfortran
 ENV CC gcc
 ENV CXX g++
 WORKDIR $SIGPROC
-RUN ./bootstrap && \
-    ./configure --prefix=$SIGPROC/install --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared && \
-    make && \
-    make install
+#RUN ./bootstrap && \
+#    ./configure --prefix=$SIGPROC/install --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared && \
+#    make && \
+#    make install
 
 # Define the command that will be exectuted when docker runs the container.
 ENTRYPOINT /bin/bash
