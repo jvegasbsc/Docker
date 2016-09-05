@@ -74,10 +74,11 @@ ENV CC gcc
 ENV CXX g++
 
 # Downloading all source codes
-RUN git clone https://github.com/SixByNine/sigproc.git && \
-    mv /home/sigproc /home/psr/soft/sigproc
-RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2 && \
-    mv /home/tempo2 /home/psr/soft/tempo2
+RUN git clone https://github.com/SixByNine/sigproc.git
+RUN ls -l >> /etc/apt/sources.list
+#    mv /home/sigproc /home/psr/soft/sigproc
+#RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2 && \
+#    mv /home/tempo2 /home/psr/soft/tempo2
 
 
 ##############################################################################################
