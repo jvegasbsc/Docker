@@ -55,7 +55,8 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # Note that the -y flag used below causes Apt to responde with an automatic yes to prompts. This
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
-    build-essential
+    build-essential \
+    git
 
 # Downloading all source codes
 WORKDIR $PSRHOME
