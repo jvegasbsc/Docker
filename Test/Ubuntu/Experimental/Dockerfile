@@ -87,13 +87,13 @@ RUN ls -l >> /etc/apt/sources.list
 # Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
 # fast_fake utility. First we set the environment variables for the install, then execute the
 # building steps.
-ENV SIGPROC $PSRHOME/sigproc
-ENV PATH $PATH:$SIGPROC/install/bin
-WORKDIR $SIGPROC
-RUN ./bootstrap && \
-    ./configure --prefix=$SIGPROC/install && \
-    make && \
-    make install
+#ENV SIGPROC $PSRHOME/sigproc
+#ENV PATH $PATH:$SIGPROC/install/bin
+#WORKDIR $SIGPROC
+#RUN ./bootstrap && \
+#    ./configure --prefix=$SIGPROC/install && \
+#    make && \
+#    make install
 
 ##############################################################################################
 # Finally...
