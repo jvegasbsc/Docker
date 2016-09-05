@@ -36,7 +36,7 @@ MAINTAINER robert.lyon@manchester.ac.uk
 # COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn’t
 # exist, it will be created even if it’s not used in any subsequent Dockerfile instruction.
 WORKDIR /home
-ENV PSRHOME=/home/rob/software
+ENV PSRHOME=/home/psr/soft
 
 # As part of its operation, the Apt tool uses a file that lists the 'sources' from which
 # sofotware packages can be obtained. This file can be found at: /etc/apt/sources.list.
@@ -66,6 +66,8 @@ RUN apt-get update -y && apt-get install -y \
     g++ \
     gfortran
 
+# These flags assist with the Sigproc comilation process, so do not remove them. If you take
+# them out, then Sigproc will not build correctly.
 ENV FC gfortran
 ENV F77 gfortran
 ENV CC gcc
@@ -75,5 +77,22 @@ ENV CXX g++
 RUN  git clone https://github.com/SixByNine/sigproc.git && \
     cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
 
+##############################################################################################
+# Sigproc Installation
+##############################################################################################
+# Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
+# fast_fake utility. First we set the environment variables for the install, then execute the
+# building steps.
+ENV SIGPROC $PSRHOME/sigproc
+ENV PATH $PATH:$SIGPROC/install/bin
+WORKDIR $SIGPROC
+RUN ./bootstrap && \
+    ./configure --prefix=$SIGPROC/install --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared && \
+    make && \
+    make install
+
+##############################################################################################
+# Finally...
+##############################################################################################
 # Define the command that will be exectuted when docker runs the container.
 ENTRYPOINT /bin/bash
