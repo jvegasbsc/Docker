@@ -56,12 +56,20 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
     build-essential \
+    autoconf \
+    libtool \
+    csh \
     git \
     cvs \
     fort77 \
     gcc \
     g++ \
     gfortran
+
+ENV FC gfortran
+ENV F77 gfortran
+ENV CC gcc
+ENV CXX g++
 
 # Downloading all source codes
 RUN  git clone https://github.com/SixByNine/sigproc.git && \
