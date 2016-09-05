@@ -9,6 +9,7 @@ RUN apt-get update -y && apt-get install -y emacs libcfitsio3 libcfitsio3-dev pg
     python python-pip python-numpy python-scipy python-matplotlib ipython x11-apps gfortran git \
     libglib2.0-dev pkg-config
 
+# Get useful software / Files.
 RUN cd /usr/local && wget https://storage.googleapis.com/student_tools/pulsar64.tar.gz && tar xvfz pulsar64.tar.gz
 RUN cd / && wget https://storage.googleapis.com/student_tools/sigproc.tar.gz && tar xvfz sigproc.tar.gz
 RUN ln -s /usr/lib/x86_64-linux-gnu/libcfitsio.so /usr/lib/x86_64-linux-gnu/libcfitsio.so.0
