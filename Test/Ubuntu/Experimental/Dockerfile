@@ -64,22 +64,8 @@ RUN apt-get update -y && apt-get install -y \
     gfortran \
 
 # Downloading all source codes
-WORKDIR $PSRHOME
 RUN  git clone https://github.com/SixByNine/sigproc.git && \
     cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
-
-# SIGPROC
-ENV SIGPROC $PSRHOME/sigproc
-ENV PATH $PATH:$SIGPROC/install/bin
-ENV FC gfortran
-ENV F77 gfortran
-ENV CC gcc
-ENV CXX g++
-WORKDIR $SIGPROC
-#RUN ./bootstrap && \
-#    ./configure --prefix=$SIGPROC/install --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared && \
-#    make && \
-#    make install
 
 # Define the command that will be exectuted when docker runs the container.
 ENTRYPOINT /bin/bash
