@@ -61,7 +61,7 @@ RUN apt-get update -y && apt-get install -y \
     fort77 \
     gcc \
     g++ \
-    gfortran \
+    gfortran
 
 # Downloading all source codes
 RUN  git clone https://github.com/SixByNine/sigproc.git && \
