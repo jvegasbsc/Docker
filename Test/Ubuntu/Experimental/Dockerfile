@@ -89,7 +89,7 @@ ENV SIGPROC $PSRHOME/sigproc
 ENV PATH $PATH:$SIGPROC/install/bin
 WORKDIR $SIGPROC
 RUN ./bootstrap && \
-    ./configure --prefix=$SIGPROC/install --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared && \
+    ./configure --prefix=$SIGPROC/install && \
     make && \
     make install
 
