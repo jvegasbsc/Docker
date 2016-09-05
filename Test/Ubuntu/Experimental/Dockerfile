@@ -54,52 +54,8 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # in the same RUN statement. We do this below to install the main software packages we require.
 # Note that the -y flag used below causes Apt to responde with an automatic yes to prompts. This
 # allows the commands to run non-interactively.
-RUN apt-get install -y \
-    autoconf \
-    automake \
-    autotools-dev \
-    build-essential \
-    cmake \
-    cmake-data \
-    cmake-curses-gui \
-    cpp \
-    csh \
-    emacs \
-    f2c \
-    fftw2 \
-    fftw-dev \
-    flex \
-    fort77 \
-    gcc \
-    g++ \
-    gfortran \
-    git \
-    libcfitsio3 \
-    libcfitsio3-dev \
-    libglib2.0-dev \
-    libgsl0-dev \
-    libboost1.55-all-dev \
-    libboost1.55-dev \
-    libboost1.55-tools-dev \
-    libfftw3-bin \
-    libfftw3-dbg \
-    libfftw3-dev \
-    libfftw3-double3 \
-    libfftw3-long3 \
-    libfftw3-quad3 \
-    libfftw3-single3 \
-    make \
-    man \
-    nano \
-    pgplot5 \
-    pkg-config \
-    python \
-    python-pip \
-    python-numpy \
-    python-scipy \
-    python-matplotlib \
-    wget \
-    x11-apps
+RUN apt-get update -y && apt-get install -y \
+    build-essential
 
 # Downloading all source codes
 WORKDIR $PSRHOME
