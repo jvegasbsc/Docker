@@ -54,10 +54,11 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # in the same RUN statement. We do this below to install the main software packages we require.
 # Note that the -y flag used below causes Apt to responde with an automatic yes to prompts. This
 # allows the commands to run non-interactively.
-RUN apt-get install -y \
+RUN apt-get update -y && apt-get install -y \
     autoconf \
     automake \
     autotools-dev \
+    bison \
     build-essential \
     cmake \
     cmake-data \
@@ -101,10 +102,15 @@ RUN apt-get install -y \
     wget \
     x11-apps
 
+# Install python modules
+RUN pip install pip -U && \
+    pip install setuptools -U && \
+    pip install astropy -U && \
+    pip install pyephem -U
+
 # Downloading all source codes
 WORKDIR $PSRHOME
-RUN  git clone https://github.com/SixByNine/sigproc.git && \
-    cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
+RUN  git clone https://github.com/SixByNine/sigproc.git
 
 # SIGPROC
 ENV SIGPROC $PSRHOME/sigproc
