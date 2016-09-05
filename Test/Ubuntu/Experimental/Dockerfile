@@ -56,7 +56,8 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
     build-essential \
-    git
+    git \
+    cvs
 
 # Downloading all source codes
 WORKDIR $PSRHOME
