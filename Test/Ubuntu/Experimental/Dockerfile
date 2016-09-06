@@ -34,8 +34,6 @@ MAINTAINER robert.lyon@manchester.ac.uk
 
 # Switch account to root and adding user accounts and password
 USER root
-RUN echo "kat:kat" | chpasswd
-RUN echo "root:Docker!" | chpasswd
 
 
 # Create space for ssh deamon and update the system
