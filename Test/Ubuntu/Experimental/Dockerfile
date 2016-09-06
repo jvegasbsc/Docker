@@ -80,8 +80,8 @@ ENV CXX g++
 # Downloading all source codes
 RUN git clone https://github.com/SixByNine/sigproc.git
 RUN mv /home/sigproc /home/psr/soft/sigproc
-RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2 && \
-    mv /home/tempo2 /home/psr/soft/tempo2
+RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
+RUN mv /home/tempo2 /home/psr/soft/tempo2
 
 
 ##############################################################################################
@@ -99,7 +99,22 @@ RUN ./bootstrap && \
     make install
 
 ##############################################################################################
+# Presto Installation
+##############################################################################################
+# Ok here we install the latest version of PRESTO.
+ENV TEMPO $PSRHOME/tempo
+ENV PATH $PATH:$PSRHOME/tempo/bin
+WORKDIR $PSRHOME/tempo
+RUN ./prepare && \
+    ./configure --prefix=$PSRHOME/tempo && \
+    make && \
+    make install && \
+    mv obsys.dat obsys.dat_ORIGINAL && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
+
+##############################################################################################
 # Finally...
 ##############################################################################################
 # Define the command that will be exectuted when docker runs the container.
+WORKDIR /home
 ENTRYPOINT /bin/bash
