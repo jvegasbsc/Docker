@@ -80,8 +80,8 @@ ENV CXX g++
 # Downloading all source codes
 RUN git clone https://github.com/SixByNine/sigproc.git
 RUN mv /home/sigproc /home/psr/soft/sigproc
-#RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2 && \
-#    mv /home/tempo2 /home/psr/soft/tempo2
+RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2 && \
+    mv /home/tempo2 /home/psr/soft/tempo2
 
 
 ##############################################################################################
@@ -90,13 +90,13 @@ RUN mv /home/sigproc /home/psr/soft/sigproc
 # Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
 # fast_fake utility. First we set the environment variables for the install, then execute the
 # building steps.
-#ENV SIGPROC $PSRHOME/sigproc
-#ENV PATH $PATH:$SIGPROC/install/bin
-#WORKDIR $SIGPROC
-#RUN ./bootstrap && \
-#    ./configure --prefix=$SIGPROC/install && \
-#    make && \
-#    make install
+ENV SIGPROC $PSRHOME/sigproc
+ENV PATH $PATH:$SIGPROC/install/bin
+WORKDIR $SIGPROC
+RUN ./bootstrap && \
+    ./configure --prefix=$SIGPROC/install && \
+    make && \
+    make install
 
 ##############################################################################################
 # Finally...
