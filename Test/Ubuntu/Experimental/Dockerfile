@@ -83,6 +83,22 @@ RUN mv /home/sigproc /home/psr/soft/sigproc
 RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
 RUN mv /home/tempo2 /home/psr/soft/tempo2
 
+WORKDIR $PSRHOME
+RUN wget http://www.imcce.fr/fr/presentation/equipes/ASD/inpop/calceph/calceph-2.2.4.tar.gz && \
+    tar -xvvf calceph-2.2.4.tar.gz -C $PSRHOME
+
+##############################################################################################
+# calceph Installation
+##############################################################################################
+# Ok here we install calceph.
+ENV PATH $PATH:$PSRHOME/calceph-2.2.4/install/bin
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/calceph-2.2.4/install/lib
+ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/calceph-2.2.4/install/include
+WORKDIR $PSRHOME/calceph-2.2.4
+RUN ./configure --prefix=$PSRHOME/calceph-2.2.4/install --with-pic --enable-shared --enable-static --enable-fortran --enable-thread && \
+    make && \
+    make check && \
+    make install
 
 ##############################################################################################
 # Sigproc Installation
@@ -112,24 +128,24 @@ RUN ./bootstrap && \
 #    mv obsys.dat obsys.dat_ORIGINAL && \
 #    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
 
-ENV TEMPO2 $PSRHOME/tempo2/T2runtime
-ENV PATH $PATH:$PSRHOME/tempo2/T2runtime/bin
-ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
-ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
-WORKDIR $PSRHOME/tempo2
-RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap # Get rid of: returned a non-zero code: 126.
-RUN ./bootstrap && \
-    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --with-calceph=$PSRHOME/calceph-2.2.4/install/lib --enable-shared --enable-static --with-pic F77=gfortran && \
-    make && \
-    make install && \
-    make plugins-install
-WORKDIR $PSRHOME/tempo2/T2runtime/observatory
-RUN mv observatories.dat observatories.dat_ORIGINAL && \
-    mv oldcodes.dat oldcodes.dat_ORIGINAL && \
-    mv aliases aliases_ORIGINAL && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/observatories.dat && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/oldcodes.dat && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/aliases
+#ENV TEMPO2 $PSRHOME/tempo2/T2runtime
+#ENV PATH $PATH:$PSRHOME/tempo2/T2runtime/bin
+#ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
+#ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
+#WORKDIR $PSRHOME/tempo2
+#RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap # Get rid of: returned a non-zero code: 126.
+#RUN ./bootstrap && \
+#    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --with-calceph=$PSRHOME/calceph-2.2.4/install/lib --enable-shared --enable-static --with-pic F77=gfortran && \
+#    make && \
+#    make install && \
+#    make plugins-install
+#WORKDIR $PSRHOME/tempo2/T2runtime/observatory
+#RUN mv observatories.dat observatories.dat_ORIGINAL && \
+#    mv oldcodes.dat oldcodes.dat_ORIGINAL && \
+#    mv aliases aliases_ORIGINAL && \
+#    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/observatories.dat && \
+#    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/oldcodes.dat && \
+#    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/aliases
 
 
 ##############################################################################################
