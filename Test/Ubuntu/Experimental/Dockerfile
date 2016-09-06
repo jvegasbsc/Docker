@@ -68,7 +68,8 @@ RUN apt-get update -y && apt-get install -y \
     fort77 \
     gcc \
     g++ \
-    gfortran
+    gfortran \
+    wget
 
 # These flags assist with the Sigproc comilation process, so do not remove them. If you take
 # them out, then Sigproc will not build correctly.
