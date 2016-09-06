@@ -99,18 +99,38 @@ RUN ./bootstrap && \
     make install
 
 ##############################################################################################
-# Presto Installation
+# TEMPO2 Installation
 ##############################################################################################
-# Ok here we install the latest version of PRESTO.
-ENV TEMPO $PSRHOME/tempo
-ENV PATH $PATH:$PSRHOME/tempo/bin
-WORKDIR $PSRHOME/tempo
-RUN ./prepare && \
-    ./configure --prefix=$PSRHOME/tempo && \
+# Ok here we install the latest version of TEMPO2.
+#ENV TEMPO $PSRHOME/tempo
+#ENV PATH $PATH:$PSRHOME/tempo/bin
+#WORKDIR $PSRHOME/tempo
+#RUN ./prepare && \
+#    ./configure --prefix=$PSRHOME/tempo && \
+#    make && \
+#    make install && \
+#    mv obsys.dat obsys.dat_ORIGINAL && \
+#    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
+
+ENV TEMPO2 $PSRHOME/tempo2/T2runtime
+ENV PATH $PATH:$PSRHOME/tempo2/T2runtime/bin
+ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
+WORKDIR $PSRHOME/tempo2
+RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap # Get rid of: returned a non-zero code: 126.
+RUN ./bootstrap && \
+    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --with-calceph=$PSRHOME/calceph-2.2.4/install/lib --enable-shared --enable-static --with-pic F77=gfortran && \
     make && \
     make install && \
-    mv obsys.dat obsys.dat_ORIGINAL && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
+    make plugins-install
+WORKDIR $PSRHOME/tempo2/T2runtime/observatory
+RUN mv observatories.dat observatories.dat_ORIGINAL && \
+    mv oldcodes.dat oldcodes.dat_ORIGINAL && \
+    mv aliases aliases_ORIGINAL && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/observatories.dat && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/oldcodes.dat && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/aliases
+
 
 ##############################################################################################
 # Finally...
