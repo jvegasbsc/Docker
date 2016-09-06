@@ -38,6 +38,10 @@ MAINTAINER robert.lyon@manchester.ac.uk
 WORKDIR /home
 ENV PSRHOME=/home/psr/soft
 
+# Make the directory where software will be installed. Note the -p flag tells mkdir to
+# also create parent directories as required.
+RUN mkdir -p /home/psr/soft
+
 # As part of its operation, the Apt tool uses a file that lists the 'sources' from which
 # sofotware packages can be obtained. This file can be found at: /etc/apt/sources.list.
 # The call below simply updates the sources file, so that software not licensed under the
@@ -75,8 +79,7 @@ ENV CXX g++
 
 # Downloading all source codes
 RUN git clone https://github.com/SixByNine/sigproc.git
-RUN ls -l >> /etc/apt/sources.list
-#    mv /home/sigproc /home/psr/soft/sigproc
+RUN mv /home/sigproc /home/psr/soft/sigproc
 #RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2 && \
 #    mv /home/tempo2 /home/psr/soft/tempo2
 
