@@ -36,7 +36,11 @@ MAINTAINER robert.lyon@manchester.ac.uk
 # COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn’t
 # exist, it will be created even if it’s not used in any subsequent Dockerfile instruction.
 WORKDIR /home
-ENV PSRHOME=/home/rob/software
+ENV PSRHOME=/home/psr/soft
+
+# Make the directory where software will be installed. Note the -p flag tells mkdir to
+# also create parent directories as required.
+RUN mkdir -p /home/psr/soft
 
 # As part of its operation, the Apt tool uses a file that lists the 'sources' from which
 # sofotware packages can be obtained. This file can be found at: /etc/apt/sources.list.
@@ -55,75 +59,99 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # Note that the -y flag used below causes Apt to responde with an automatic yes to prompts. This
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
-    autoconf \
-    automake \
-    autotools-dev \
-    bison \
     build-essential \
-    cmake \
-    cmake-data \
-    cmake-curses-gui \
-    cpp \
+    autoconf \
+    libtool \
     csh \
-    emacs \
-    f2c \
-    fftw2 \
-    fftw-dev \
-    flex \
+    git \
+    cvs \
     fort77 \
     gcc \
     g++ \
     gfortran \
-    git \
-    libcfitsio3 \
-    libcfitsio3-dev \
-    libglib2.0-dev \
-    libgsl0-dev \
-    libboost1.55-all-dev \
-    libboost1.55-dev \
-    libboost1.55-tools-dev \
-    libfftw3-bin \
-    libfftw3-dbg \
-    libfftw3-dev \
-    libfftw3-double3 \
-    libfftw3-long3 \
-    libfftw3-quad3 \
-    libfftw3-single3 \
-    make \
-    man \
-    nano \
-    pgplot5 \
-    pkg-config \
-    python \
-    python-pip \
-    python-numpy \
-    python-scipy \
-    python-matplotlib \
-    wget \
-    x11-apps
+    wget
 
-# Install python modules
-RUN pip install pip -U && \
-    pip install setuptools -U && \
-    pip install astropy -U && \
-    pip install pyephem -U
-
-# Downloading all source codes
-WORKDIR $PSRHOME
-RUN  git clone https://github.com/SixByNine/sigproc.git
-
-# SIGPROC
-ENV SIGPROC $PSRHOME/sigproc
-ENV PATH $PATH:$SIGPROC/install/bin
+# These flags assist with the Sigproc comilation process, so do not remove them. If you take
+# them out, then Sigproc will not build correctly.
 ENV FC gfortran
 ENV F77 gfortran
 ENV CC gcc
 ENV CXX g++
+
+# Downloading all source codes
+RUN git clone https://github.com/SixByNine/sigproc.git
+RUN mv /home/sigproc /home/psr/soft/sigproc
+RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
+RUN mv /home/tempo2 /home/psr/soft/tempo2
+
+WORKDIR $PSRHOME
+RUN wget http://www.imcce.fr/fr/presentation/equipes/ASD/inpop/calceph/calceph-2.2.4.tar.gz && \
+    tar -xvvf calceph-2.2.4.tar.gz -C $PSRHOME
+
+##############################################################################################
+# calceph Installation
+##############################################################################################
+# Ok here we install calceph.
+#ENV PATH $PATH:$PSRHOME/calceph-2.2.4/install/bin
+#ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/calceph-2.2.4/install/lib
+#ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/calceph-2.2.4/install/include
+#WORKDIR $PSRHOME/calceph-2.2.4
+#RUN ./configure --prefix=$PSRHOME/calceph-2.2.4/install --with-pic --enable-shared --enable-static --enable-fortran --enable-thread && \
+#    make && \
+#    make check && \
+#    make install
+
+##############################################################################################
+# Sigproc Installation
+##############################################################################################
+# Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
+# fast_fake utility. First we set the environment variables for the install, then execute the
+# building steps.
+ENV SIGPROC $PSRHOME/sigproc
+ENV PATH $PATH:$SIGPROC/install/bin
 WORKDIR $SIGPROC
 RUN ./bootstrap && \
-    ./configure --prefix=$SIGPROC/install --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared && \
+    ./configure --prefix=$SIGPROC/install && \
     make && \
     make install
 
+##############################################################################################
+# TEMPO2 Installation
+##############################################################################################
+# Ok here we install the latest version of TEMPO2.
+#ENV TEMPO $PSRHOME/tempo
+#ENV PATH $PATH:$PSRHOME/tempo/bin
+#WORKDIR $PSRHOME/tempo
+#RUN ./prepare && \
+#    ./configure --prefix=$PSRHOME/tempo && \
+#    make && \
+#    make install && \
+#    mv obsys.dat obsys.dat_ORIGINAL && \
+#    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
+
+ENV TEMPO2 $PSRHOME/tempo2/T2runtime
+ENV PATH $PATH:$PSRHOME/tempo2/T2runtime/bin
+ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
+WORKDIR $PSRHOME/tempo2
+RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap # Get rid of: returned a non-zero code: 126.
+RUN ./bootstrap && \
+    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared --enable-static --with-pic F77=gfortran && \
+    make && \
+    make install && \
+    make plugins-install
+WORKDIR $PSRHOME/tempo2/T2runtime/observatory
+RUN mv observatories.dat observatories.dat_ORIGINAL && \
+    mv oldcodes.dat oldcodes.dat_ORIGINAL && \
+    mv aliases aliases_ORIGINAL && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/observatories.dat && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/oldcodes.dat && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/aliases
+
+
+##############################################################################################
+# Finally...
+##############################################################################################
 # Define the command that will be exectuted when docker runs the container.
+WORKDIR /home
 ENTRYPOINT /bin/bash
