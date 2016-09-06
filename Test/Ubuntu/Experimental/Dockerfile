@@ -92,14 +92,14 @@ RUN wget http://www.imcce.fr/fr/presentation/equipes/ASD/inpop/calceph/calceph-2
 # calceph Installation
 ##############################################################################################
 # Ok here we install calceph.
-ENV PATH $PATH:$PSRHOME/calceph-2.2.4/install/bin
-ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/calceph-2.2.4/install/lib
-ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/calceph-2.2.4/install/include
-WORKDIR $PSRHOME/calceph-2.2.4
-RUN ./configure --prefix=$PSRHOME/calceph-2.2.4/install --with-pic --enable-shared --enable-static --enable-fortran --enable-thread && \
-    make && \
-    make check && \
-    make install
+#ENV PATH $PATH:$PSRHOME/calceph-2.2.4/install/bin
+#ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/calceph-2.2.4/install/lib
+#ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/calceph-2.2.4/install/include
+#WORKDIR $PSRHOME/calceph-2.2.4
+#RUN ./configure --prefix=$PSRHOME/calceph-2.2.4/install --with-pic --enable-shared --enable-static --enable-fortran --enable-thread && \
+#    make && \
+#    make check && \
+#    make install
 
 ##############################################################################################
 # Sigproc Installation
@@ -136,7 +136,7 @@ ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
 WORKDIR $PSRHOME/tempo2
 RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap # Get rid of: returned a non-zero code: 126.
 RUN ./bootstrap && \
-    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --with-calceph=$PSRHOME/calceph-2.2.4/install/lib --enable-shared --enable-static --with-pic F77=gfortran && \
+    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared --enable-static --with-pic F77=gfortran && \
     make && \
     make install && \
     make plugins-install
