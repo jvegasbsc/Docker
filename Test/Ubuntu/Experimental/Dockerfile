@@ -36,17 +36,16 @@ MAINTAINER robert.lyon@manchester.ac.uk
 # COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn’t
 # exist, it will be created even if it’s not used in any subsequent Dockerfile instruction.
 WORKDIR /home
-ENV PSRHOME=/home/psr/soft
-
-# Make the directory where software will be installed. Note the -p flag tells mkdir to
-# also create parent directories as required.
-RUN mkdir -p /home/psr/soft
 
 # As part of its operation, the Apt tool uses a file that lists the 'sources' from which
 # sofotware packages can be obtained. This file can be found at: /etc/apt/sources.list.
 # The call below simply updates the sources file, so that software not licensed under the
 # GPL (or similar license) can be downloaded via Apt to the image.
 RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /etc/apt/sources.list
+
+##############################################################################################
+# Install 'OS' software.
+##############################################################################################
 
 # According to the docker reference documentation,  which can be found online at:
 #   https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/
@@ -59,24 +58,436 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # Note that the -y flag used below causes Apt to responde with an automatic yes to prompts. This
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
+autoconf \
+    automake \
+    autotools-dev \
+    bison \
     build-essential \
-    autoconf \
-    libtool \
+    cmake \
+    cmake-data \
+    cmake-curses-gui \
+    cpp \
     csh \
-    git \
     cvs \
+    cython \
+    dkms \
+    f2c \
+    fftw2 \
+    fftw-dev \
+    flex \
     fort77 \
     gcc \
     g++ \
     gfortran \
-    wget
+    ghostscript \
+    ghostscript-x \
+    git \
+    git-core \
+    gnuplot \
+    gnuplot-x11 \
+    gsl-bin \
+    gv \
+    h5utils \
+    hdf5-tools \
+    htop \
+    hdfview \
+    hwloc \
+    ipython \
+    ipython-notebook \
+    libbison-dev \
+    libboost1.55-all-dev \
+    libboost1.55-dev \
+    libboost1.55-tools-dev \
+    libc6-dev \
+    libc-dev-bin \
+    libcfitsio3 \
+    libcfitsio3-dev \
+    libcloog-isl4 \
+    libcppunit-dev \
+    libcppunit-subunit0 \
+    libcppunit-subunit-dev \
+    libfftw3-bin \
+    libfftw3-dbg \
+    libfftw3-dev \
+    libfftw3-double3 \
+    libfftw3-long3 \
+    libfftw3-quad3 \
+    libfftw3-single3 \
+    libgd2-xpm-dev \
+    libgd3 \
+    libglib2.0-dev \
+    libgmp3-dev \
+    libgsl0-dev \
+    libgsl0ldbl \
+    libhdf5-7 \
+    libhdf5-dev \
+    libhdf5-serial-dev \
+    libhwloc-dev \
+    liblapack3 \
+    liblapack3gf \
+    liblapack-dev \
+    liblapacke \
+    liblapacke-dev \
+    liblapack-pic \
+    liblapack-test \
+    libblas3 \
+    libblas3gf \
+    libblas-dev \
+    liblua5.1-0 \
+    liblua5.2-0 \
+    libltdl7 \
+    libltdl-dev \
+    libncurses5-dev \
+    libpng12-dev \
+    libpng3 \
+    libpng++-dev \
+    libpth-dev \
+    libreadline6 \
+    libreadline6-dev \
+    libsocket++1 \
+    libsocket++-dev \
+    libtool \
+    libx11-dev \
+    locate \
+    lsof \
+    m4 \
+    make \
+    man \
+    mc \
+    nano \
+    nfs-common \
+    numactl \
+    openssh-server \
+    pbzip2 \
+    pgplot5 \
+    pkgconf \
+    pkg-config \
+    python-qt4-dev \
+    pyqt4-dev-tools \
+    vim \
+    wget \
+    screen \
+    subversion \
+    swig \
+    swig2.0 \
+    tcsh \
+    tk \
+    tk-dev \
+    tmux
 
+    #build-essential \
+    #autoconf \
+    #libtool \
+    #csh \
+    #git \
+    #cvs \
+    #fort77 \
+    #gcc \
+    #g++ \
+    #gfortran \
+    #wget
+
+##############################################################################################
+# Setup environment variables
+##############################################################################################
+
+ENV PSRHOME=/home/psr/soft
+
+# Make the directory where software will be installed. Note the -p flag tells mkdir to
+# also create parent directories as required.
+RUN mkdir -p /home/psr/soft
+
+# Define home, psrhome, software, OSTYPE
+ENV HOME=/home
+ENV OSTYPE=linux
+
+# Python packages
+ENV PYTHONPATH=$HOME/ve/lib/python2.7/site-packages
+
+
+# PGPLOT
+ENV PGPLOT_DIR=/usr/lib/pgplot5
+ENV PGPLOT_FONT=/usr/lib/pgplot5/grfont.dat
+ENV PGPLOT_INCLUDES=/usr/include
+ENV PGPLOT_BACKGROUND=white
+ENV PGPLOT_FOREGROUND=black
+ENV PGPLOT_DEV=/xs
+
+
+# calceph
+ENV PATH=$PATH:$PSRHOME/calceph-2.2.4/install/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/calceph-2.2.4/install/lib
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/calceph-2.2.4/install/include
+
+
+# ds9
+ENV PATH=$PATH:$PSRHOME/ds9-7.4
+
+
+# fv
+ENV PATH=$PATH:$PSRHOME/fv5.4
+
+
+# psrcat
+ENV PSRCAT_FILE=$PSRHOME/psrcat_tar/psrcat.db
+ENV PATH=$PATH:$PSRHOME/psrcat_tar
+
+
+# tempo
+ENV TEMPO=$PSRHOME/tempo
+ENV PATH=$PATH:$PSRHOME/tempo/bin
+
+
+# tempo2
+ENV TEMPO2=$PSRHOME/tempo2/T2runtime
+ENV PATH=$PATH:$PSRHOME/tempo2/T2runtime/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
+
+
+# PSRCHIVE
+ENV PSRCHIVE=$PSRHOME/psrchive
+ENV PATH=$PATH:$PSRCHIVE/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRCHIVE/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRCHIVE/install/lib
+ENV PYTHONPATH=$PYTHONPATH:$PSRCHIVE/install/lib/python2.7/site-packages
+
+
+# SOFA C-library
+ENV SOFA=$PSRHOME/sofa
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$SOFA/20160503/c/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SOFA/20160503/c/install/lib
+
+
+# SOFA FORTRAN-library
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SOFA/20160503/f77/install/lib
+
+
+# SIGPROC
 # These flags assist with the Sigproc comilation process, so do not remove them. If you take
 # them out, then Sigproc will not build correctly.
-ENV FC gfortran
-ENV F77 gfortran
-ENV CC gcc
-ENV CXX g++
+ENV SIGPROC=$PSRHOME/sigproc
+ENV PATH=$PATH:$SIGPROC/install/bin
+ENV FC=gfortran
+ENV F77=gfortran
+ENV CC=gcc
+ENV CXX=g++
+
+
+# sigpyproc
+ENV SIGPYPROC=$PSRHOME/sigpyproc
+ENV PYTHONPATH=$PYTHONPATH:$SIGPYPROC/lib/python
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SIGPYPROC/lib/c
+
+
+# CUB
+ENV CUB=$PSRHOME:cub-1.5.2
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH/$CUB
+
+
+# PSRDADA
+ENV PSRDADA=$PSRHOME/psrdada
+ENV PATH=$PATH:$PSRDADA/install/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRDADA/install/lib
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRDADA/install/include
+ENV CUDA_NVCC_FLAGS="-O3 -arch sm_30 -m64 -lineinfo -I$PSRHOME/cub-1.5.2"
+
+
+# szlib
+ENV SZIP=$PSRHOME/szip-2.1
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SZIP/install/lib
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$SZIP/install/include
+
+
+# h5check
+ENV H5CHECK=$PSRHOME/h5check-2.0.1
+ENV PATH=$PATH:$H5CHECK/install/bin
+
+
+# DAL
+ENV DAL=$PSRHOME/DAL
+ENV PATH=$PATH:$DAL/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$DAL/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DAL/install/lib
+
+
+# DSPSR
+ENV DSPSR=$PSRHOME/dspsr
+ENV PATH=$PATH:$DSPSR/install/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DSPSR/install/lib
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$DSPSR/install/include
+
+
+# clig
+ENV CLIG=$PSRHOME/clig
+ENV PATH=$PATH:$CLIG/instal/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLIG/instal/lib
+
+
+# CLooG
+ENV CLOOG=$PSRHOME/cloog-0.18.4
+ENV PATH=$PATH:$CLOOG/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$CLOOG/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLOOG/install/lib
+
+
+# Ctags
+ENV CTAGS=$PSRHOME/ctags-5.8
+ENV PATH=$PATH:$CTAGS/install/bin
+
+
+# GeographicLib
+ENV GEOLIB=$PSRHOME/GeographicLib-1.46
+ENV PATH=$PATH:$GEOLIB/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$GEOLIB/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$GEOLIB/install/lib
+ENV PYTHONPATH=$PYTHONPATH:$GEOLIB/install/lib/python/site-packages
+
+
+# h5edit
+ENV H5EDIT=$PSRHOME/h5edit-1.3.1
+ENV PATH=$PATH:$H5EDIT/install/bin
+
+
+# Leptonica
+ENV LEPTONICA=$PSRHOME/leptonica-1.73
+ENV PATH=$PATH:$LEPTONICA/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$LEPTONICA/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LEPTONICA/install/lib
+
+
+# tvmet
+ENV TVMET=$PSRHOME/tvmet-1.7.2
+ENV PATH=$PATH:$TVMET/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$TVMET/install/include
+
+
+# FFTW2
+ENV FFTW2=$PSRHOME/fftw-2.1.5
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$FFTW2/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$FFTW2/install/lib
+
+
+# fitsverify
+ENV FITSVERIFY=$PSRHOME/fitsverify
+ENV PATH=$PATH:$FITSVERIFY
+
+
+# PSRSALSA
+ENV PSRSALSA=$PSRHOME/psrsalsa
+ENV PATH=$PATH:$PSRSALSA/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRSALSA/src/lib
+
+
+# pypsrfits
+ENV PYPSRFITS=$PSRHOME/pypsrfits
+
+
+# PRESTO
+ENV PRESTO=$PSRHOME/presto
+ENV PATH=$PATH:$PRESTO/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PRESTO/lib
+ENV PYTHONPATH=$PYTHONPATH:$PRESTO/lib/python
+
+
+# wapp2psrfits
+ENV WAPP2PSRFITS=$PSRHOME/wapp2psrfits
+ENV PATH=$PATH:$WAPP2PSRFITS
+
+
+# psrfits2psrfits
+ENV PSRFITS2PSRFITS=$PSRHOME/psrfits2psrfits
+ENV PATH=$PATH:$PSRFITS2PSRFITS
+
+
+# psrfits_utils
+ENV PSRFITS_UTILS=$PSRHOME/psrfits_utils
+ENV PATH=$PATH:$PSRFITS_UTILS/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRFITS_UTILS/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRFITS_UTILS/install/lib
+
+
+# pyslalib
+ENV PYSLALIB=$PSRHOME/pyslalib
+ENV VPSR=$PSRHOME/Vpsr
+
+
+# Vpsr
+ENV PATH=$PATH:$VPSR
+
+
+# GPy
+ENV GPY=$PSRHOME/GPy
+ENV PATH=$PATH:$GPY
+
+
+# katversion
+ENV KATVERSION=$PSRHOME/katversion
+
+
+# katpoint
+ENV KATPOINT=$PSRHOME/katpoint
+
+
+# katdal
+ENV KATDAL=$PSRHOME/katdal
+
+
+# katconfig
+ENV KATCONFIG=$PSRHOME/katconfig
+
+
+# katsdpscripts
+ENV KATSDPSCRIPTS=$PSRHOME/katsdpscripts
+
+
+# katsdpinfrastructure
+ENV KATSDPINFRASTRUCTURE=$PSRHOME/katsdpinfrastructure
+
+
+# katpulse
+ENV KATPULSE=$PSRHOME/katpulse
+
+
+# casacore measures_data
+ENV MEASURES_DATA=$PSRHOME/measures_data
+
+
+# casa
+ENV CASA=$PSRHOME/casa-release-4.6.0-el6
+ENV PATH=$PATH:$PSRHOME/casa-release-4.6.0-el6/bin
+
+
+# casacore
+ENV CASACORE=$PSRHOME/casacore
+ENV PATH=$PATH:$CASACORE/build/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$CASACORE/build/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CASACORE/build/install/lib
+
+
+# python-casacore
+ENV PYTHON_CASACORE=$PSRHOME/python-casacore
+
+
+# makems
+ENV MAKEMS=$PSRHOME/makems
+ENV PATH=$PATH:$MAKEMS/LOFAR/installed/gnu_opt/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$MAKEMS/LOFAR/installed/gnu_opt/LOFAR/installed/gnu_opt/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MAKEMS/LOFAR/installed/gnu_opt/lib64
+
+
+# wsclean
+ENV WSCLEAN=$PSRHOME/wsclean-1.12
+ENV PATH=$PATH:$WSCLEAN/build/install/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$WSCLEAN/build/install/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WSCLEAN/build/install/lib
+
+
+# coast_guard
+ENV COAST_GUARD=$PSRHOME/coast_guard
+ENV PATH=$PATH:$COAST_GUARD
+ENV COASTGUARD_CFG=$COAST_GUARD/configurations
+ENV PYTHONPATH=$PYTHONPATH:$COAST_GUARD
 
 # Downloading all source codes
 RUN git clone https://github.com/SixByNine/sigproc.git
@@ -107,7 +518,6 @@ WORKDIR $PSRHOME
 # Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
 # fast_fake utility. First we set the environment variables for the install, then execute the
 # building steps.
-ENV SIGPROC $PSRHOME/sigproc
 ENV PATH $PATH:$SIGPROC/install/bin
 WORKDIR $SIGPROC
 RUN ./bootstrap && \
@@ -129,10 +539,6 @@ RUN ./bootstrap && \
 #    mv obsys.dat obsys.dat_ORIGINAL && \
 #    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
 
-ENV TEMPO2 $PSRHOME/tempo2/T2runtime
-ENV PATH $PATH:$PSRHOME/tempo2/T2runtime/bin
-ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
-ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
 WORKDIR $PSRHOME/tempo2
 RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap # Get rid of: returned a non-zero code: 126.
 RUN ./bootstrap && \
