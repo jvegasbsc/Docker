@@ -547,8 +547,8 @@ RUN mv observatories.dat observatories.dat_ORIGINAL && \
 # Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
 # fast_fake utility. First we set the environment variables for the install, then execute the
 # building steps.
-ENV PATH $PATH:$SIGPROC/install/bin
-WORKDIR $SIGPROC
+
+WORKDIR $PSRHOME/sigproc
 RUN ./bootstrap && \
     ./configure --prefix=$SIGPROC/install && \
     make && \
