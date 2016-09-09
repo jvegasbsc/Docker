@@ -513,19 +513,6 @@ WORKDIR $PSRHOME
 #    make install
 
 ##############################################################################################
-# Sigproc Installation
-##############################################################################################
-# Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
-# fast_fake utility. First we set the environment variables for the install, then execute the
-# building steps.
-ENV PATH $PATH:$SIGPROC/install/bin
-WORKDIR $SIGPROC
-RUN ./bootstrap && \
-    ./configure --prefix=$SIGPROC/install && \
-    make && \
-    make install
-
-##############################################################################################
 # TEMPO2 Installation
 ##############################################################################################
 # Ok here we install the latest version of TEMPO2.
@@ -554,6 +541,18 @@ RUN mv observatories.dat observatories.dat_ORIGINAL && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/oldcodes.dat && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/aliases
 
+##############################################################################################
+# Sigproc Installation
+##############################################################################################
+# Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
+# fast_fake utility. First we set the environment variables for the install, then execute the
+# building steps.
+ENV PATH $PATH:$SIGPROC/install/bin
+WORKDIR $SIGPROC
+RUN ./bootstrap && \
+    ./configure --prefix=$SIGPROC/install && \
+    make && \
+    make install
 
 ##############################################################################################
 # Finally...
