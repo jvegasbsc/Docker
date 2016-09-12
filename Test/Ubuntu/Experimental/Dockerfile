@@ -510,8 +510,8 @@ RUN mv /home/tempo2 /home/psr/soft/tempo2
 
 # Download test vector files
 WORKDIR $PSRHOME
-RUN wget https://raw.githubusercontent.com/scienceguyrob/Docker/blob/master/Resources/Deploy/DockerImageReadme.txt
-RUN wget https://raw.githubusercontent.com/scienceguyrob/Docker/blob/master/Resources/Deploy/pulsar_injection_pipeline.zip
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/DockerImageReadme.txt
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/pulsar_injection_pipeline.zip
 RUN unzip pulsar_injection_pipeline.zip -d $PSRHOME
 
 ##############################################################################################
