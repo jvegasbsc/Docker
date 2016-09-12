@@ -513,6 +513,7 @@ WORKDIR $PSRHOME
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/DockerImageReadme.txt
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/pulsar_injection_pipeline.zip
 RUN unzip pulsar_injection_pipeline.zip -d $PSRHOME
+RUN rm __MACOSX -R
 
 ##############################################################################################
 # TEMPO2 Installation
