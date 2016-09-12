@@ -187,6 +187,18 @@ autoconf \
     #gfortran \
     #wget
 
+# Install python modules
+RUN pip install pip -U && \
+    pip install setuptools -U && \
+    pip install numpy -U && \
+    pip install scipy -U && \
+    pip install fitsio -U && \
+    pip install astropy -U && \
+    pip install astroplan -U && \
+    pip install pyfits -U && \
+    pip install matplotlib -U && \
+    pip install pyephem -U
+
 ##############################################################################################
 # Setup environment variables
 ##############################################################################################
@@ -495,49 +507,16 @@ RUN mv /home/sigproc /home/psr/soft/sigproc
 RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
 RUN mv /home/tempo2 /home/psr/soft/tempo2
 
+# Download test vector files
 WORKDIR $PSRHOME
-# wget http://www.imcce.fr/fr/presentation/equipes/ASD/inpop/calceph/calceph-2.2.4.tar.gz && \
-#    tar -xvvf calceph-2.2.4.tar.gz -C $PSRHOME
-
-##############################################################################################
-# calceph Installation
-##############################################################################################
-# Ok here we install calceph.
-#ENV PATH $PATH:$PSRHOME/calceph-2.2.4/install/bin
-#ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:$PSRHOME/calceph-2.2.4/install/lib
-#ENV C_INCLUDE_PATH $C_INCLUDE_PATH:$PSRHOME/calceph-2.2.4/install/include
-#WORKDIR $PSRHOME/calceph-2.2.4
-#RUN ./configure --prefix=$PSRHOME/calceph-2.2.4/install --with-pic --enable-shared --enable-static --enable-fortran --enable-thread && \
-#    make && \
-#    make check && \
-#    make install
-
-##############################################################################################
-# Sigproc Installation
-##############################################################################################
-# Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
-# fast_fake utility. First we set the environment variables for the install, then execute the
-# building steps.
-#ENV PATH $PATH:$SIGPROC/install/bin
-#WORKDIR $SIGPROC
-#RUN ./bootstrap && \
-#    ./configure --prefix=$SIGPROC/install && \
-#    make && \
-#    make install
+RUN wget https://raw.githubusercontent.com/scienceguyrob/Docker/blob/master/Resources/Deploy/DockerImageReadme.txt
+RUN wget https://raw.githubusercontent.com/scienceguyrob/Docker/blob/master/Resources/Deploy/pulsar_injection_pipeline.zip
+RUN unzip pulsar_injection_pipeline.zip -d $PSRHOME
 
 ##############################################################################################
 # TEMPO2 Installation
 ##############################################################################################
 # Ok here we install the latest version of TEMPO2.
-#ENV TEMPO $PSRHOME/tempo
-#ENV PATH $PATH:$PSRHOME/tempo/bin
-#WORKDIR $PSRHOME/tempo
-#RUN ./prepare && \
-#    ./configure --prefix=$PSRHOME/tempo && \
-#    make && \
-#    make install && \
-#    mv obsys.dat obsys.dat_ORIGINAL && \
-#    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
 
 WORKDIR $PSRHOME/tempo2
 RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap # Get rid of: returned a non-zero code: 126.
@@ -554,11 +533,19 @@ RUN mv observatories.dat observatories.dat_ORIGINAL && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/oldcodes.dat && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/aliases
 
-#WORKDIR $SIGPROC
-#RUN ./bootstrap && \
-#    ./configure --prefix=$SIGPROC/install && \
-#    make && \
-#    make install
+##############################################################################################
+# Sigproc Installation
+##############################################################################################
+# Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
+# fast_fake utility. First we set the environment variables for the install, then execute the
+# building steps.
+WORKDIR $SIGPROC
+RUN ./bootstrap && \
+    ./configure --prefix=$SIGPROC/install LDFLAGS="-L/home/psr/soft/tempo2/T2runtime/lib" LIBS="-ltempo2" && \
+    make && \
+    make install
+
+
 ##############################################################################################
 # Finally...
 ##############################################################################################
