@@ -141,6 +141,7 @@ OS PACKAGES INSTALLED:
 114. tk
 115. tk-dev
 116. tmux
+117. python-pip
 
 PYTHON MODULES:
 
