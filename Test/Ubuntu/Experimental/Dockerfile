@@ -514,6 +514,7 @@ RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Doc
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/pulsar_injection_pipeline.zip
 RUN unzip pulsar_injection_pipeline.zip -d $PSRHOME
 RUN rm __MACOSX -R
+RUN rm pulsar_injection_pipeline.zip
 
 ##############################################################################################
 # TEMPO2 Installation
