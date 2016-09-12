@@ -58,7 +58,7 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # Note that the -y flag used below causes Apt to responde with an automatic yes to prompts. This
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
-autoconf \
+    autoconf \
     automake \
     autotools-dev \
     bison \
@@ -173,7 +173,8 @@ autoconf \
     tcsh \
     tk \
     tk-dev \
-    tmux
+    tmux \
+    python-pip
 
     #build-essential \
     #autoconf \
