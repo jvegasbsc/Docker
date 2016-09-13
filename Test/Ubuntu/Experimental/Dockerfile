@@ -508,8 +508,10 @@ ENV PYTHONPATH=$PYTHONPATH:$COAST_GUARD
 # Downloading all source codes
 RUN git clone https://github.com/SixByNine/sigproc.git
 RUN git clone https://github.com/scottransom/presto.git
+RUN git clone git://git.code.sf.net/p/tempo/tempo
 RUN mv /home/sigproc /home/psr/soft/sigproc
 RUN mv /home/presto /home/psr/soft/presto
+RUN mv /home/tempo /home/psr/soft/tempo
 RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
 RUN mv /home/tempo2 /home/psr/soft/tempo2
 
@@ -579,6 +581,17 @@ RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/mast
 RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/ersatz.py
 
 ##############################################################################################
+# TEMPO Installation
+##############################################################################################
+WORKDIR $PSRHOME/tempo
+RUN ./prepare && \
+    ./configure --prefix=$PSRHOME/tempo && \
+    make && \
+    make install && \
+    mv obsys.dat obsys.dat_ORIGINAL && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
+
+##############################################################################################
 # TEMPO2 Installation
 ##############################################################################################
 # Ok here we install the latest version of TEMPO2.
@@ -614,7 +627,7 @@ RUN ./bootstrap && \
 # PRESTO Installation
 ##############################################################################################
 WORKDIR $PRESTO/src
-# RUN make makewisdom
+RUN make makewisdom
 RUN make prep && \
     make
 WORKDIR $PRESTO/python/ppgplot_src

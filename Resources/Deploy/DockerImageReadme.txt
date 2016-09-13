@@ -166,6 +166,7 @@ The software can be found in: /home/psr/soft
 3. Test vector generation scripts.
 4. Elmarie van Heerden's code that inserts non-stationary noise and RFI into filterbank files.
 5. PRESTO
+6. Tempo
 
 OTHER SOFTWARE:
 
