@@ -507,7 +507,9 @@ ENV PYTHONPATH=$PYTHONPATH:$COAST_GUARD
 
 # Downloading all source codes
 RUN git clone https://github.com/SixByNine/sigproc.git
+RUN git clone https://github.com/scottransom/presto.git
 RUN mv /home/sigproc /home/psr/soft/sigproc
+RUN mv /home/presto /home/psr/soft/presto
 RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
 RUN mv /home/tempo2 /home/psr/soft/tempo2
 
