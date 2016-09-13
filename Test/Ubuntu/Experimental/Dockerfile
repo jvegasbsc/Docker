@@ -610,6 +610,18 @@ RUN ./bootstrap && \
     make && \
     make install
 
+##############################################################################################
+# PRESTO Installation
+##############################################################################################
+WORKDIR $PRESTO/src
+# RUN make makewisdom
+RUN make prep && \
+    make
+WORKDIR $PRESTO/python/ppgplot_src
+RUN mv _ppgplot.c _ppgplot.c_ORIGINAL && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/_ppgplot.c
+WORKDIR $PRESTO/python
+RUN make
 
 ##############################################################################################
 # Finally...
