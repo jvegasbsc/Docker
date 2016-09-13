@@ -58,6 +58,7 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # Note that the -y flag used below causes Apt to responde with an automatic yes to prompts. This
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
+    bc \
     autoconf \
     automake \
     autotools-dev \
@@ -174,7 +175,9 @@ RUN apt-get update -y && apt-get install -y \
     tk \
     tk-dev \
     tmux \
-    python-pip
+    python-pip \
+    ca-certificates \
+    curl
 
     #build-essential \
     #autoconf \
@@ -507,6 +510,49 @@ RUN git clone https://github.com/SixByNine/sigproc.git
 RUN mv /home/sigproc /home/psr/soft/sigproc
 RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
 RUN mv /home/tempo2 /home/psr/soft/tempo2
+
+
+##############################################################################################
+# CUDA Drivers
+#
+# This part of the docker file was taken from the Nvidia Github respository, credit goes
+# to the NVIDIA CORPORATION <digits@nvidia.com> for this. Please see the following link
+# for more information: https://github.com/NVIDIA/nvidia-docker
+##############################################################################################
+
+ENV CUDA_VERSION 8.0
+LABEL com.nvidia.cuda.version="8.0"
+
+ENV CUDA_DOWNLOAD_SUM 58a5f8e6e8bf6515c55fd99e38b1a617142e556c70679cf563f30f972bbdd811
+
+ENV CUDA_PKG_VERSION 8-0=8.0.27-1
+RUN curl -o cuda-repo.deb -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-ubuntu1404-8-0-rc_8.0.27-1_amd64.deb && \
+    echo "$CUDA_DOWNLOAD_SUM  cuda-repo.deb" | sha256sum -c --strict - && \
+    dpkg -i cuda-repo.deb && \
+    rm cuda-repo.deb && \
+    apt-get update && apt-get install -y --no-install-recommends \
+        cuda-nvrtc-$CUDA_PKG_VERSION \
+        cuda-nvgraph-$CUDA_PKG_VERSION \
+        cuda-cusolver-$CUDA_PKG_VERSION \
+        cuda-cublas-$CUDA_PKG_VERSION \
+        cuda-cufft-$CUDA_PKG_VERSION \
+        cuda-curand-$CUDA_PKG_VERSION \
+        cuda-cusparse-$CUDA_PKG_VERSION \
+        cuda-npp-$CUDA_PKG_VERSION \
+        cuda-cudart-$CUDA_PKG_VERSION && \
+    ln -s cuda-$CUDA_VERSION /usr/local/cuda && \
+    apt-get remove --purge -y cuda-repo-ubuntu1404-8-0-rc && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
+    echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
+    ldconfig
+
+RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
+    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
+
+ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
 ##############################################################################################
 # TEST VECTOR PIPELINE + README Setup

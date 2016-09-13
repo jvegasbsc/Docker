@@ -142,6 +142,9 @@ OS PACKAGES INSTALLED:
 115. tk-dev
 116. tmux
 117. python-pip
+118. bc
+119. ca-certificates
+120. curl
 
 PYTHON MODULES:
 

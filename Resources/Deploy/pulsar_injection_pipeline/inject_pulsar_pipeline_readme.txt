@@ -27,7 +27,7 @@ Note that all the source files described below can be found in the src folder.
     Header size (approx) : 1kb
     File size: 34,359,738,368 bytes (~34 GB)
 
-    fast_fake --tobs 600 --tsamp 64 --fch1 1350 --foff 0.078125 --nbits 8 --nchans 4096 --seed 1 > output.fil
+    fast_fake --tobs 600 --tsamp 64 --fch1 1350 --foff -0.078125 --nbits 8 --nchans 4096 --seed 1 > output.fil
 
 2. To insert a signal into the noise filter bank file, the inject_pulsar
    tool is used. The inject_pulsar tool requires two prerequisite files
