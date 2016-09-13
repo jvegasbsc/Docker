@@ -508,13 +508,27 @@ RUN mv /home/sigproc /home/psr/soft/sigproc
 RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
 RUN mv /home/tempo2 /home/psr/soft/tempo2
 
+##############################################################################################
+# TEST VECTOR PIPELINE + README Setup
+##############################################################################################
 # Download test vector files
-WORKDIR $PSRHOME
+WORKDIR /home
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/DockerImageReadme.txt
+
+WORKDIR $PSRHOME
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/pulsar_injection_pipeline.zip
 RUN unzip pulsar_injection_pipeline.zip -d $PSRHOME
 RUN rm __MACOSX -R
 RUN rm pulsar_injection_pipeline.zip
+
+##############################################################################################
+# Elmarie van Heerden's Code
+##############################################################################################
+
+RUN mkdir /home/psr/soft/evh
+WORKDIR $PSRHOME/evh
+RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/README.txt
+RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/ersatz.py
 
 ##############################################################################################
 # TEMPO2 Installation
