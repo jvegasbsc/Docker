@@ -627,7 +627,7 @@ RUN ./bootstrap && \
 # PRESTO Installation
 ##############################################################################################
 WORKDIR $PRESTO/src
-RUN make makewisdom
+#RUN make makewisdom
 RUN make prep && \
     make
 WORKDIR $PRESTO/python/ppgplot_src
