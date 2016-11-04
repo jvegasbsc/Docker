@@ -23,6 +23,8 @@
 # python 2.6 (scipy, numpy stacks).
 # fftw
 # dev tools (gfortran etc.)
+#
+#
 ##############################################################################################
 
 # Use well supported Ubuntu distribution. Note that a newer version of Ubunutu
@@ -589,7 +591,7 @@ RUN ./prepare && \
     make && \
     make install && \
     mv obsys.dat obsys.dat_ORIGINAL && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/obsys.dat
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo/obsys.dat
 
 ##############################################################################################
 # TEMPO2 Installation
@@ -607,9 +609,8 @@ WORKDIR $PSRHOME/tempo2/T2runtime/observatory
 RUN mv observatories.dat observatories.dat_ORIGINAL && \
     mv oldcodes.dat oldcodes.dat_ORIGINAL && \
     mv aliases aliases_ORIGINAL && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/observatories.dat && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/oldcodes.dat && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/aliases
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/observatories.dat && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/aliases
 
 ##############################################################################################
 # Sigproc Installation
@@ -632,7 +633,7 @@ RUN make prep && \
     make
 WORKDIR $PRESTO/python/ppgplot_src
 RUN mv _ppgplot.c _ppgplot.c_ORIGINAL && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/_ppgplot.c
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/ppgplot/_ppgplot.c
 WORKDIR $PRESTO/python
 RUN make
 
