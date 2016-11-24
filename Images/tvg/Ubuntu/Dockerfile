@@ -60,126 +60,126 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # Note that the -y flag used below causes Apt to responde with an automatic yes to prompts. This
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
-    bc \
-    autoconf \
-    automake \
-    autotools-dev \
-    bison \
-    build-essential \
-    cmake \
-    cmake-data \
-    cmake-curses-gui \
-    cpp \
-    csh \
-    cvs \
-    cython \
-    dkms \
-    f2c \
-    fftw2 \
-    fftw-dev \
-    flex \
-    fort77 \
-    gcc \
-    g++ \
-    gfortran \
-    ghostscript \
-    ghostscript-x \
-    git \
-    git-core \
-    gnuplot \
-    gnuplot-x11 \
-    gsl-bin \
-    gv \
-    h5utils \
-    hdf5-tools \
-    htop \
-    hdfview \
-    hwloc \
-    ipython \
-    ipython-notebook \
-    libbison-dev \
-    libboost1.55-all-dev \
-    libboost1.55-dev \
-    libboost1.55-tools-dev \
-    libc6-dev \
-    libc-dev-bin \
-    libcfitsio3 \
-    libcfitsio3-dev \
-    libcloog-isl4 \
-    libcppunit-dev \
-    libcppunit-subunit0 \
-    libcppunit-subunit-dev \
-    libfftw3-bin \
-    libfftw3-dbg \
-    libfftw3-dev \
-    libfftw3-double3 \
-    libfftw3-long3 \
-    libfftw3-quad3 \
-    libfftw3-single3 \
-    libgd2-xpm-dev \
-    libgd3 \
-    libglib2.0-dev \
-    libgmp3-dev \
-    libgsl0-dev \
-    libgsl0ldbl \
-    libhdf5-7 \
-    libhdf5-dev \
-    libhdf5-serial-dev \
-    libhwloc-dev \
-    liblapack3 \
-    liblapack3gf \
-    liblapack-dev \
-    liblapacke \
-    liblapacke-dev \
-    liblapack-pic \
-    liblapack-test \
-    libblas3 \
-    libblas3gf \
-    libblas-dev \
-    liblua5.1-0 \
-    liblua5.2-0 \
-    libltdl7 \
-    libltdl-dev \
-    libncurses5-dev \
-    libpng12-dev \
-    libpng3 \
-    libpng++-dev \
-    libpth-dev \
-    libreadline6 \
-    libreadline6-dev \
-    libsocket++1 \
-    libsocket++-dev \
-    libtool \
-    libx11-dev \
-    locate \
-    lsof \
-    m4 \
-    make \
-    man \
-    mc \
-    nano \
-    nfs-common \
-    numactl \
-    openssh-server \
-    pbzip2 \
-    pgplot5 \
-    pkgconf \
-    pkg-config \
-    python-qt4-dev \
-    pyqt4-dev-tools \
-    vim \
-    wget \
-    screen \
-    subversion \
-    swig \
-    swig2.0 \
-    tcsh \
-    tk \
-    tk-dev \
-    tmux \
-    python-pip \
-    ca-certificates \
-    curl
+    bc \                        # VERSION: 1.06.95-8ubuntu1     LINK: http://packages.ubuntu.com/trusty/bc
+    autoconf \                  # VERSION:                      LINK:
+    automake \                  # VERSION:                      LINK:
+    autotools-dev \             # VERSION:                      LINK:
+    bison \                     # VERSION:                      LINK:
+    build-essential \           # VERSION:                      LINK:
+    cmake \                     # VERSION:                      LINK:
+    cmake-data \                # VERSION:                      LINK:
+    cmake-curses-gui \          # VERSION:                      LINK:
+    cpp \                       # VERSION:                      LINK:
+    csh \                       # VERSION:                      LINK:
+    cvs \                       # VERSION:                      LINK:
+    cython \                    # VERSION:                      LINK:
+    dkms \                      # VERSION:                      LINK:
+    f2c \                       # VERSION:                      LINK:
+    fftw2 \                     # VERSION:                      LINK:
+    fftw-dev \                  # VERSION:                      LINK:
+    flex \                      # VERSION:                      LINK:
+    fort77 \                    # VERSION:                      LINK:
+    gcc \                       # VERSION:                      LINK:
+    g++ \                       # VERSION:                      LINK:
+    gfortran \                  # VERSION:                      LINK:
+    ghostscript \               # VERSION:                      LINK:
+    ghostscript-x \             # VERSION:                      LINK:
+    git \                       # VERSION:                      LINK:
+    git-core \                  # VERSION:                      LINK:
+    gnuplot \                   # VERSION:                      LINK:
+    gnuplot-x11 \               # VERSION:                      LINK:
+    gsl-bin \                   # VERSION:                      LINK:
+    gv \                        # VERSION:                      LINK:
+    h5utils \                   # VERSION:                      LINK:
+    hdf5-tools \                # VERSION:                      LINK:
+    htop \                      # VERSION:                      LINK:
+    hdfview \                   # VERSION:                      LINK:
+    hwloc \                     # VERSION:                      LINK:
+    ipython \                   # VERSION:                      LINK:
+    ipython-notebook \          # VERSION:                      LINK:
+    libbison-dev \              # VERSION:                      LINK:
+    libboost1.55-all-dev \      # VERSION:                      LINK:
+    libboost1.55-dev \          # VERSION:                      LINK:
+    libboost1.55-tools-dev \    # VERSION:                      LINK:
+    libc6-dev \                 # VERSION:                      LINK:
+    libc-dev-bin \              # VERSION:                      LINK:
+    libcfitsio3 \               # VERSION:                      LINK:
+    libcfitsio3-dev \           # VERSION:                      LINK:
+    libcloog-isl4 \             # VERSION:                      LINK:
+    libcppunit-dev \            # VERSION:                      LINK:
+    libcppunit-subunit0 \       # VERSION:                      LINK:
+    libcppunit-subunit-dev \    # VERSION:                      LINK:
+    libfftw3-bin \              # VERSION:                      LINK:
+    libfftw3-dbg \              # VERSION:                      LINK:
+    libfftw3-dev \              # VERSION:                      LINK:
+    libfftw3-double3 \          # VERSION:                      LINK:
+    libfftw3-long3 \            # VERSION:                      LINK:
+    libfftw3-quad3 \            # VERSION:                      LINK:
+    libfftw3-single3 \          # VERSION:                      LINK:
+    libgd2-xpm-dev \            # VERSION:                      LINK:
+    libgd3 \                    # VERSION:                      LINK:
+    libglib2.0-dev \            # VERSION:                      LINK:
+    libgmp3-dev \               # VERSION:                      LINK:
+    libgsl0-dev \               # VERSION:                      LINK:
+    libgsl0ldbl \               # VERSION:                      LINK:
+    libhdf5-7 \                 # VERSION:                      LINK:
+    libhdf5-dev \               # VERSION:                      LINK:
+    libhdf5-serial-dev \        # VERSION:                      LINK:
+    libhwloc-dev \              # VERSION:                      LINK:
+    liblapack3 \                # VERSION:                      LINK:
+    liblapack3gf \              # VERSION:                      LINK:
+    liblapack-dev \             # VERSION:                      LINK:
+    liblapacke \                # VERSION:                      LINK:
+    liblapacke-dev \            # VERSION:                      LINK:
+    liblapack-pic \             # VERSION:                      LINK:
+    liblapack-test \            # VERSION:                      LINK:
+    libblas3 \                  # VERSION:                      LINK:
+    libblas3gf \                # VERSION:                      LINK:
+    libblas-dev \               # VERSION:                      LINK:
+    liblua5.1-0 \               # VERSION:                      LINK:
+    liblua5.2-0 \               # VERSION:                      LINK:
+    libltdl7 \                  # VERSION:                      LINK:
+    libltdl-dev \               # VERSION:                      LINK:
+    libncurses5-dev \           # VERSION:                      LINK:
+    libpng12-dev \              # VERSION:                      LINK:
+    libpng3 \                   # VERSION:                      LINK:
+    libpng++-dev \              # VERSION:                      LINK:
+    libpth-dev \                # VERSION:                      LINK:
+    libreadline6 \              # VERSION:                      LINK:
+    libreadline6-dev \          # VERSION:                      LINK:
+    libsocket++1 \              # VERSION:                      LINK:
+    libsocket++-dev \           # VERSION:                      LINK:
+    libtool \                   # VERSION:                      LINK:
+    libx11-dev \                # VERSION:                      LINK:
+    locate \                    # VERSION:                      LINK:
+    lsof \                      # VERSION:                      LINK:
+    m4 \                        # VERSION:                      LINK:
+    make \                      # VERSION:                      LINK:
+    man \                       # VERSION:                      LINK:
+    mc \                        # VERSION:                      LINK:
+    nano \                      # VERSION:                      LINK:
+    nfs-common \                # VERSION:                      LINK:
+    numactl \                   # VERSION:                      LINK:
+    openssh-server \            # VERSION:                      LINK:
+    pbzip2 \                    # VERSION:                      LINK:
+    pgplot5 \                   # VERSION:                      LINK:
+    pkgconf \                   # VERSION:                      LINK:
+    pkg-config \                # VERSION:                      LINK:
+    python-qt4-dev \            # VERSION:                      LINK:
+    pyqt4-dev-tools \           # VERSION:                      LINK:
+    vim \                       # VERSION:                      LINK:
+    wget \                      # VERSION:                      LINK:
+    screen \                    # VERSION:                      LINK:
+    subversion \                # VERSION:                      LINK:
+    swig \                      # VERSION:                      LINK:
+    swig2.0 \                   # VERSION:                      LINK:
+    tcsh \                      # VERSION:                      LINK:
+    tk \                        # VERSION:                      LINK:
+    tk-dev \                    # VERSION:                      LINK:
+    tmux \                      # VERSION:                      LINK:
+    python-pip \                # VERSION:                      LINK:
+    ca-certificates \           # VERSION:                      LINK:
+    curl                        # VERSION:                      LINK:
 
     #build-essential \
     #autoconf \
