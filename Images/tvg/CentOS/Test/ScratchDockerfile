@@ -153,6 +153,7 @@ RUN yum -y update && yum -y install \
     libtool-ltdl-devel \
     #libncurses5-dev \           # VERSION:                      LINK:
     ncurses \
+    ncurses-devel \
     #libpng12-dev \              # VERSION:                      LINK:
     #libpng3 \                   # VERSION:                      LINK:
     #libpng++-dev \              # VERSION:                      LINK:

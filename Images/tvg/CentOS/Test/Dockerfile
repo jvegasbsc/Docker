@@ -41,17 +41,13 @@ WORKDIR /home
 ##############################################################################################
 # Install 'OS' software.
 ##############################################################################################
-RUN yum groups mark convert
+RUN yum groups mark convert # Run due to CentOS bug.
 RUN yum group list
-RUN yum -y update && yum -y install \
+RUN yum -y install epel-release
+RUN yum -y groupinstall "Development Tools"
+RUN yum -y groupinstall "X11"
 
-    # **************************************************
-    #
-    # Install main tools:
-    #
-    # **************************************************
-    groupinstall "Development Tools" \
-    groupinstall "X11" \
+RUN yum -y update && yum -y install \
 
     # **************************************************
     #
@@ -104,6 +100,20 @@ RUN yum -y update && yum -y install \
     # information. It primarily aims at helping applications with gathering information
     # about modern computing hardware so as to exploit it accordingly and efficiently.
     hwloc \
+
+    # VERSION: 4.8.7
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/mc-4.8.7-8.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # Midnight Commander is a visual shell much like a file manager, only with many more features.
+    mc \
+
+    # VERSION: 2.3.1
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/nano-2.3.1-10.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # GNU nano is a small and friendly text editor.
+    nano \
 
     # VERSION: 6.18.01
     # LINK: https://pkgs.org/centos-7/centos-x86_64/tcsh-6.18.01-8.el7.x86_64.rpm.html
@@ -230,7 +240,6 @@ RUN yum -y update && yum -y install \
 WORKDIR /home
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/CentOS/springdale-computational.repo
 RUN mv springdale-computational.repo /etc/yum.repos.d/springdale-computational.repo
-RUN rm __MACOSX -R
 
 WORKDIR /home
 
