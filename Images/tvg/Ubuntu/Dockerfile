@@ -61,8 +61,8 @@ RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /et
 # allows the commands to run non-interactively.
 RUN apt-get update -y && apt-get install -y \
     bc \                        # VERSION: 1.06.95-8ubuntu1     LINK: http://packages.ubuntu.com/trusty/bc
-    autoconf \                  # VERSION:                      LINK:
-    automake \                  # VERSION:                      LINK:
+    autoconf \                  # VERSION: 2.69-6               LINK: http://packages.ubuntu.com/trusty/autoconf
+    automake \                  # VERSION: 1.14.1-2ubuntu1      LINK: http://packages.ubuntu.com/trusty/automake
     autotools-dev \             # VERSION:                      LINK:
     bison \                     # VERSION:                      LINK:
     build-essential \           # VERSION:                      LINK:
