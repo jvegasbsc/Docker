@@ -41,7 +41,11 @@ WORKDIR /home
 ##############################################################################################
 # Install 'OS' software.
 ##############################################################################################
-RUN yum groups mark convert # Run due to CentOS bug.
+
+# Run due to CentOS bug.
+RUN yum groups mark convert
+
+# Now run repository setup and group software install.
 RUN yum group list
 RUN yum -y install epel-release
 RUN yum -y groupinstall "Development Tools"
@@ -81,6 +85,15 @@ RUN yum -y update && yum -y install \
     # installing module RPMS as originally developed by Dell.
     dkms \
 
+    # VERSION: 1.15
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gsl-1.15-13.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The GNU Scientific Library (GSL) is a collection of routines for numerical
+    # analysis, written in C.
+    gsl \
+    gsl-devel \
+
     # VERSION: 2.0.2
     # LINK: https://pkgs.org/centos-7/epel-x86_64/htop-2.0.2-1.el7.x86_64.rpm.html
     #
@@ -100,6 +113,17 @@ RUN yum -y update && yum -y install \
     # information. It primarily aims at helping applications with gathering information
     # about modern computing hardware so as to exploit it accordingly and efficiently.
     hwloc \
+    hwloc-devel \
+
+    # VERSION: 2.4.2
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/libtool-ltdl-2.4.2-20.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The libtool-ltdl package contains the GNU Libtool Dynamic Module Loader, a library that
+    # provides a consistent, portable interface which simplifies the process of using dynamic
+    # modules.
+    libtool-ltdl \
+    libtool-ltdl-devel \
 
     # VERSION: 4.8.7
     # LINK: https://pkgs.org/centos-7/centos-x86_64/mc-4.8.7-8.el7.x86_64.rpm.html
@@ -115,6 +139,29 @@ RUN yum -y update && yum -y install \
     # GNU nano is a small and friendly text editor.
     nano \
 
+    # VERSION: 5.9
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/ncurses-5.9-13.20130511.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # The curses library routines are a terminal-independent method of updating character screens
+    # with reasonable optimization.
+    ncurses \
+    ncurses-devel \
+
+    # VERSION: 7.1.0
+    # LINK: https://pkgs.org/centos-7/epel-x86_64/python-pip-7.1.0-1.el7.noarch.rpm.html
+    #
+    # DESCRIPTION:
+    # Pip is a replacement for 'easy_install'.
+    python-pip \
+
+    # VERSION: 4.1.0
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/screen-4.1.0-0.21.20120314git3c2946.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # The screen utility allows you to have multiple logins on just one terminal.
+    screen \
+
     # VERSION: 6.18.01
     # LINK: https://pkgs.org/centos-7/centos-x86_64/tcsh-6.18.01-8.el7.x86_64.rpm.html
     #
@@ -128,6 +175,20 @@ RUN yum -y update && yum -y install \
     # DESCRIPTION:
     # GNU Wget is a file retrieval utility which can use either the HTTP or FTP protocols.
     wget \
+
+    # **************************************************
+    #
+    # Fortran
+    #
+    # **************************************************
+
+    # VERSION: 5.1.4
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/lua-5.1.4-14.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # Lua is a powerful light-weight programming language designed for extending applications.
+    lua \
+    lua-devel \
 
     # **************************************************
     #
@@ -166,6 +227,24 @@ RUN yum -y update && yum -y install \
     # actual compilation.
     cpp \
 
+    # VERSION: 1.12.1
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/cppunit-1.12.1-11.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # CppUnit is the C++ port of the famous JUnit framework for unit testing.
+    cppunit \
+    cppunit-devel \
+    subunit-cppunit \
+    subunit-cppunit-devel \
+
+    # VERSION: 1.53.0
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/boost-1.53.0-25.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # Boost provides free peer-reviewed portable C++ source libraries.
+    boost \
+    boost-devel \
+
     # VERSION: 0.19
     # LINK: https://pkgs.org/centos-7/centos-x86_64/Cython-0.19-3.el7.x86_64.rpm.html
     #
@@ -173,11 +252,44 @@ RUN yum -y update && yum -y install \
     # This is a development version of Pyrex, a language for writing Python extension modules.
     Cython \
 
+    # VERSION: 2.17
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/glibc-2.17-105.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The glibc package contains standard libraries which are used by multiple programs
+    # on the system.
+    glibc \
+    glibc-devel \
+
     # **************************************************
     #
     # Pulsar software dependencies
     #
     # **************************************************
+
+    # VERSION: 3.370
+    # LINK: https://pkgs.org/centos-7/epel-x86_64/cfitsio-3.370-1.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # CFITSIO is a library of C and FORTRAN subroutines for reading and writing data
+    # files in FITS (Flexible Image Transport System) data format.
+    cfitsio \
+    cfitsio-devel \
+
+    # VERSION: 3.4.2
+    # LINK: https://pkgs.org/search/blas
+    #
+    # DESCRIPTION:
+    # BLAS (Basic Linear Algebra Subprograms) is a standard library which provides a
+    # number of basic algorithms for numerical algebra.
+    blas \
+    blas-devel \
+    blas-static \
+    blas350 \
+    blas350-devel \
+    blas350-static \
+    blas350_64 \
+    blas350_64-static \
 
     # VERSION: 2.1.5
     # LINK: https://pkgs.org/centos-7/epel-x86_64/fftw2-2.1.5-26.el7.x86_64.rpm.html
@@ -195,13 +307,72 @@ RUN yum -y update && yum -y install \
     # using the FFTW fast Fourier transform library version 2.
     fftw2-devel \
 
+    # VERSION: 2.0.35
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gd-2.0.35-26.el7.i686.rpm.html
+
+    # DESCRIPTION:
+    # The gd graphics library allows your code to quickly draw images complete with
+    # lines, arcs, text, multiple colors, cut and paste from other images, and flood
+    # fills, and to write out the result as a PNG or JPEG file.
+    gd \
+    gd-devel \
+
+    # VERSION: 9.07
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/ghostscript-9.07-18.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # Ghostscript is a set of software that provides a PostScript interpreter, a set of C
+    # procedures (the Ghostscript library, which implements the graphics capabilities in
+    # the PostScript language) and an interpreter for Portable Document Format (PDF) files.
+    ghostscript \
+
+    # VERSION: 2.42.2
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/glib2-2.42.2-5.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # GLib is the low-level core library that forms the basis for projects such as GTK+ and GNOME.
+    glib2 \
+    glib2-devel \
+
+    # VERSION: 6.0.0
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gmp-6.0.0-11.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The gmp package contains GNU MP, a library for arbitrary precision arithmetic,
+    # signed integers operations, rational numbers and floating point numbers.
+    gmp \
+    gmp-devel \
+
     # VERSION: 4.6.2
     # LINK: https://pkgs.org/centos-7/centos-x86_64/gnuplot-4.6.2-3.el7.x86_64.rpm.html
     #
     # DESCRIPTION:
     # Gnuplot is a command-line driven, interactive function plotting program especially suited
     # for scientific data representation.
-    gnuplot\
+    gnuplot \
+
+    # VERSION: 1.8.12
+    # LINK: https://pkgs.org/centos-7/epel-x86_64/hdf5-1.8.12-7.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # HDF5 is a general purpose library and file format for storing scientific data.
+    hdf5 \
+    hdf5-devel \
+
+    # VERSION: 3.4.2
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/lapack-3.4.2-5.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # LAPACK (Linear Algebra PACKage) is a standard library for numerical linear algebra.
+    # LAPACK provides routines for solving systems of simultaneous linear equations,
+    # least-squares solutions of linear systems of equations, eigenvalue problems, and
+    # singular value problems.
+    lapack \
+    lapack-static \
+    lapack-devel \
+    lapack350 \
+    lapack350-devel \
+    lapack350-static \
 
     # VERSION:
     # LINK:

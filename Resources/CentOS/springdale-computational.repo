@@ -2,3 +2,5 @@
 name=PUIAS computational Base $releasever - $basearch
 mirrorlist=http://puias.math.ias.edu/data/puias/computational/$releasever/$basearch/mirrorlist
 #baseurl=http://puias.math.ias.edu/data/puias/computational/$releasever/$basearch
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puias
