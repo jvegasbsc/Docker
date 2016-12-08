@@ -441,10 +441,6 @@ ENV PGPLOT_BACKGROUND=white
 ENV PGPLOT_FOREGROUND=black
 ENV PGPLOT_DEV=/xs
 
-# psrcat
-ENV PSRCAT_FILE=$PSRHOME/psrcat_tar/psrcat.db
-ENV PATH=$PATH:$PSRHOME/psrcat_tar
-
 # tempo
 ENV TEMPO=$PSRHOME/tempo
 ENV PATH=$PATH:$PSRHOME/tempo/bin
@@ -582,17 +578,7 @@ RUN mv observatories.dat observatories.dat_ORIGINAL && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/observatories.dat && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/aliases
 
-##############################################################################################
-# Sigproc Installation
-##############################################################################################
-# Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
-# fast_fake utility. First we set the environment variables for the install, then execute the
-# building steps.
-WORKDIR $SIGPROC
-RUN ./bootstrap && \
-    ./configure --prefix=$SIGPROC/install LDFLAGS="-L/home/psr/soft/tempo2/T2runtime/lib" LIBS="-ltempo2" && \
-    make && \
-    make install
+
 
 ##############################################################################################
 # PRESTO Installation

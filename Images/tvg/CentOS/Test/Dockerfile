@@ -4,8 +4,6 @@
 # Version   : 0.1
 # Author    : Rob Lyon (robert.lyon@manchester.ac.uk)
 ##############################################################################################
-# Based upon original script written by Casey Law (caseyjlaw@gmail.com) and
-# Maciej Serylak (mserylak@ska.ac.za).
 #
 # This docker file will setup an environment with only a basic pulsar stack. This
 # is because the image is to be used for test vector generation, for tests of SKA
@@ -15,15 +13,13 @@
 #
 # SOFTWARE:
 #
-# psarchive
-# tempo2
-# fast_fake
-# inject_pulsar
-# pgplot
+# tempo, tempo2
+# sigproc
+# inject_pulsar (Mike keith's build of sigproc)
 # python 2.6 (scipy, numpy stacks).
-# fftw 2 and 3
+# fftw 3
 # dev tools (gfortran etc.)
-#
+# PRESTO is not compiled to reduce docker bloat.
 #
 ##############################################################################################
 
@@ -43,12 +39,6 @@ WORKDIR /home
 ##############################################################################################
 
 RUN yum -y update && yum -y install \
-
-    ##########################################################################################
-    #
-    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD TEMPO
-    #
-    ##########################################################################################
 
     # **************************************************
     #
@@ -124,7 +114,7 @@ RUN yum -y update && yum -y install \
 
     ##########################################################################################
     #
-    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD TEMPO 2
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD TEMPO
     #
     ##########################################################################################
 
@@ -143,7 +133,64 @@ RUN yum -y update && yum -y install \
     # DESCRIPTION:
     # This package adds C++ support to the GNU Compiler Collection. It includes support for
     # most of the current C++ specification, including templates and exception handling.
-    gcc-c++
+    gcc-c++ \
+
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD TEMPO 2
+    #
+    ##########################################################################################
+
+    # VERSION: 3.370
+    # LINK: https://pkgs.org/centos-7/epel-x86_64/cfitsio-3.370-1.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # CFITSIO is a library of C and FORTRAN subroutines for reading and writing data
+    # files in FITS (Flexible Image Transport System) data format.
+    cfitsio \
+    cfitsio-devel \
+
+    # VERSION: 3.3.3
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/fftw-devel-3.3.3-8.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # FFTW is a C subroutine library for computing the Discrete Fourier Transform (DFT) in
+    # one or more dimensions, of both real and complex data, and of arbitrary input size.
+    fftw-devel \
+
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD SIGPROC
+    #
+    ##########################################################################################
+
+    # VERSION: 2.17
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/glibc-2.17-105.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The glibc package contains standard libraries which are used by multiple programs
+    # on the system.
+    glibc \
+    glibc-devel \
+
+    # Install python modules
+    RUN pip install --upgrade pip
+    RUN pip install pip -U
+    RUN pip install setuptools -U
+    RUN pip install numpy -U
+    RUN pip install scipy -U
+    RUN pip install fitsio -U
+    RUN pip install astropy -U
+    RUN pip install astroplan -U
+    RUN pip install pyfits -U
+    RUN pip install matplotlib -U
+    RUN pip install pyephem -U
+
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD PRESTO
+    #
+    ##########################################################################################
 
 ##############################################################################################
 # Install software repositories
@@ -167,6 +214,10 @@ ENV OSTYPE=linux
 # Python packages
 ENV PYTHONPATH=$HOME/ve/lib/python2.7/site-packages
 
+# psrcat
+ENV PSRCAT_FILE=$PSRHOME/psrcat_tar/psrcat.db
+ENV PATH=$PATH:$PSRHOME/psrcat_tar
+
 # Tempo
 ENV TEMPO=$PSRHOME/tempo
 ENV PATH=$PATH:$PSRHOME/tempo/bin
@@ -187,6 +238,12 @@ ENV F77=gfortran
 ENV CC=gcc
 ENV CXX=g++
 
+# PRESTO
+ENV PRESTO=$PSRHOME/presto
+ENV PATH=$PATH:$PRESTO/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PRESTO/lib
+ENV PYTHONPATH=$PYTHONPATH:$PRESTO/lib/python
+
 ##############################################################################################
 # TEST VECTOR PIPELINE + README Setup
 ##############################################################################################
@@ -199,6 +256,15 @@ RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/pul
 RUN unzip pulsar_injection_pipeline.zip -d $PSRHOME
 RUN rm __MACOSX -R
 RUN rm pulsar_injection_pipeline.zip
+
+##############################################################################################
+# Elmarie van Heerden's Code
+##############################################################################################
+
+RUN mkdir /home/psr/soft/evh
+WORKDIR $PSRHOME/evh
+RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/README.txt
+RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/ersatz.py
 
 ##############################################################################################
 # PULSAR SOFTWARE PIPELINE
@@ -270,7 +336,45 @@ RUN mv observatories.dat observatories.dat_ORIGINAL && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/observatories.dat && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/aliases
 
+##############################################################################################
+# Sigproc Installation
+##############################################################################################
+# Ok here we install sigproc - This is Mike Keith's version of Sigproc, which comes with the
+# fast_fake utility. First we set the environment variables for the install, then execute the
+# building steps.
+WORKDIR $SIGPROC
+RUN ./bootstrap && \
+    ./configure --prefix=$SIGPROC/install LDFLAGS="-L/home/psr/soft/tempo2/T2runtime/lib" LIBS="-ltempo2" && \
+    make && \
+    make install
 
+##############################################################################################
+# CUDA Drivers
+#
+# This part of the docker file was taken from the Nvidia Github respository, credit goes
+# to the NVIDIA CORPORATION <digits@nvidia.com> for this. Please see the following link
+# for more information: https://github.com/NVIDIA/nvidia-docker
+##############################################################################################
+
+RUN yum install -y \
+        cuda-core-$CUDA_PKG_VERSION \
+        cuda-misc-headers-$CUDA_PKG_VERSION \
+        cuda-command-line-tools-$CUDA_PKG_VERSION \
+        cuda-license-$CUDA_PKG_VERSION \
+        cuda-nvrtc-dev-$CUDA_PKG_VERSION \
+        cuda-nvml-dev-$CUDA_PKG_VERSION \
+        cuda-nvgraph-dev-$CUDA_PKG_VERSION \
+        cuda-cusolver-dev-$CUDA_PKG_VERSION \
+        cuda-cublas-dev-$CUDA_PKG_VERSION \
+        cuda-cufft-dev-$CUDA_PKG_VERSION \
+        cuda-curand-dev-$CUDA_PKG_VERSION \
+        cuda-cusparse-dev-$CUDA_PKG_VERSION \
+        cuda-npp-dev-$CUDA_PKG_VERSION \
+        cuda-cudart-dev-$CUDA_PKG_VERSION \
+        cuda-driver-dev-$CUDA_PKG_VERSION && \
+    rm -rf /var/cache/yum/*
+
+ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
 
 ##############################################################################################
 # Finally...
