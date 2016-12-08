@@ -14,7 +14,7 @@ of SKA SDP and CSP software. For a more complete pulsar image, look at the
 Dockerfile's written by Casey Law, or Maciej Serylak.
 
 Please note that it takes around 1 hour to build the entire image on the
-dockerhub. Also note that the image size is approximately 1.5 GB on disk.
+dockerhub. Also note that the image size is approximately 2.5 GB on disk.
 
 **************************************************************************
 

@@ -4,8 +4,6 @@
 # Version   : 0.1
 # Author    : Rob Lyon (robert.lyon@manchester.ac.uk)
 ##############################################################################################
-# Based upon original script written by Casey Law (caseyjlaw@gmail.com) and
-# Maciej Serylak (mserylak@ska.ac.za).
 #
 # This docker file will setup an environment with only a basic pulsar stack. This
 # is because the image is to be used for test vector generation, for tests of SKA
@@ -15,15 +13,13 @@
 #
 # SOFTWARE:
 #
-# psarchive
-# tempo2
-# fast_fake
-# inject_pulsar
-# pgplot
+# tempo, tempo2
+# sigproc
+# inject_pulsar (Mike keith's build of sigproc)
 # python 2.6 (scipy, numpy stacks).
-# fftw
+# fftw 3
 # dev tools (gfortran etc.)
-#
+# PRESTO is not compiled to reduce docker bloat.
 #
 ##############################################################################################
 
@@ -41,220 +37,207 @@ WORKDIR /home
 ##############################################################################################
 # Install 'OS' software.
 ##############################################################################################
-
+RUN yum -y install epel-release
 RUN yum -y update && yum -y install \
-    groupinstall "Development Tools" \
-    bc \                        # VERSION: bc-1.06.95-13.el7.x86_64.rpm     LINK: https://pkgs.org/download/bc
-    autoconf \                  # VERSION: autoconf-2.69-11.el7.noarch.rpm  LINK: https://pkgs.org/search/autoconf
-    automake \                  # VERSION: automake-1.13.4-3.el7.noarch.rpm LINK: https://pkgs.org/search/automake  Corresponding version: http://ftp.gnu.org/gnu/automake/automake-1.14.1.tar.gz
-    #autotools-dev \            # VERSION:                      LINK:
-    bison \                     # VERSION:                      LINK:
-    build-essential \           # VERSION:                      LINK:
-    cmake \                     # VERSION:                      LINK:
-    cmake3-data \               # VERSION:                      LINK:
-    cmake3-gui \                # VERSION:                      LINK:
-    cpp \                       # VERSION:                      LINK:
-    csh \                       # VERSION:                      LINK:
-    cvs \                       # VERSION:                      LINK:
-    cython \                    # VERSION:                      LINK:
-    dkms \                      # VERSION:                      LINK:
-    f2c \                       # VERSION:                      LINK:
-    fftw2 \                     # VERSION:                      LINK:
-    fftw-dev \                  # VERSION:                      LINK:
-    flex \                      # VERSION:                      LINK:
-    fort77 \                    # VERSION:                      LINK:
-    gcc \                       # VERSION:                      LINK:
-    g++ \                       # VERSION:                      LINK:
-    gfortran \                  # VERSION:                      LINK:
-    ghostscript \               # VERSION:                      LINK:
-    ghostscript-x \             # VERSION:                      LINK:
-    git \                       # VERSION:                      LINK:
-    git-core \                  # VERSION:                      LINK:
-    gnuplot \                   # VERSION:                      LINK:
-    gnuplot-x11 \               # VERSION:                      LINK:
-    gsl-bin \                   # VERSION:                      LINK:
-    gv \                        # VERSION:                      LINK:
-    h5utils \                   # VERSION:                      LINK:
-    hdf5-tools \                # VERSION:                      LINK:
-    htop \                      # VERSION:                      LINK:
-    hdfview \                   # VERSION:                      LINK:
-    hwloc \                     # VERSION:                      LINK:
-    ipython \                   # VERSION:                      LINK:
-    ipython-notebook \          # VERSION:                      LINK:
-    libbison-dev \              # VERSION:                      LINK:
-    libboost1.55-all-dev \      # VERSION:                      LINK:
-    libboost1.55-dev \          # VERSION:                      LINK:
-    libboost1.55-tools-dev \    # VERSION:                      LINK:
-    libc6-dev \                 # VERSION:                      LINK:
-    libc-dev-bin \              # VERSION:                      LINK:
-    libcfitsio3 \               # VERSION:                      LINK:
-    libcfitsio3-dev \           # VERSION:                      LINK:
-    libcloog-isl4 \             # VERSION:                      LINK:
-    libcppunit-dev \            # VERSION:                      LINK:
-    libcppunit-subunit0 \       # VERSION:                      LINK:
-    libcppunit-subunit-dev \    # VERSION:                      LINK:
-    libfftw3-bin \              # VERSION:                      LINK:
-    libfftw3-dbg \              # VERSION:                      LINK:
-    libfftw3-dev \              # VERSION:                      LINK:
-    libfftw3-double3 \          # VERSION:                      LINK:
-    libfftw3-long3 \            # VERSION:                      LINK:
-    libfftw3-quad3 \            # VERSION:                      LINK:
-    libfftw3-single3 \          # VERSION:                      LINK:
-    libgd2-xpm-dev \            # VERSION:                      LINK:
-    libgd3 \                    # VERSION:                      LINK:
-    libglib2.0-dev \            # VERSION:                      LINK:
-    libgmp3-dev \               # VERSION:                      LINK:
-    libgsl0-dev \               # VERSION:                      LINK:
-    libgsl0ldbl \               # VERSION:                      LINK:
-    libhdf5-7 \                 # VERSION:                      LINK:
-    libhdf5-dev \               # VERSION:                      LINK:
-    libhdf5-serial-dev \        # VERSION:                      LINK:
-    libhwloc-dev \              # VERSION:                      LINK:
-    liblapack3 \                # VERSION:                      LINK:
-    liblapack3gf \              # VERSION:                      LINK:
-    liblapack-dev \             # VERSION:                      LINK:
-    liblapacke \                # VERSION:                      LINK:
-    liblapacke-dev \            # VERSION:                      LINK:
-    liblapack-pic \             # VERSION:                      LINK:
-    liblapack-test \            # VERSION:                      LINK:
-    libblas3 \                  # VERSION:                      LINK:
-    libblas3gf \                # VERSION:                      LINK:
-    libblas-dev \               # VERSION:                      LINK:
-    liblua5.1-0 \               # VERSION:                      LINK:
-    liblua5.2-0 \               # VERSION:                      LINK:
-    libltdl7 \                  # VERSION:                      LINK:
-    libltdl-dev \               # VERSION:                      LINK:
-    libncurses5-dev \           # VERSION:                      LINK:
-    libpng12-dev \              # VERSION:                      LINK:
-    libpng3 \                   # VERSION:                      LINK:
-    libpng++-dev \              # VERSION:                      LINK:
-    libpth-dev \                # VERSION:                      LINK:
-    libreadline6 \              # VERSION:                      LINK:
-    libreadline6-dev \          # VERSION:                      LINK:
-    libsocket++1 \              # VERSION:                      LINK:
-    libsocket++-dev \           # VERSION:                      LINK:
-    libtool \                   # VERSION:                      LINK:
-    libx11-dev \                # VERSION:                      LINK:
-    locate \                    # VERSION:                      LINK:
-    lsof \                      # VERSION:                      LINK:
-    m4 \                        # VERSION:                      LINK:
-    make \                      # VERSION:                      LINK:
-    man \                       # VERSION:                      LINK:
-    mc \                        # VERSION:                      LINK:
-    nano \                      # VERSION:                      LINK:
-    nfs-common \                # VERSION:                      LINK:
-    numactl \                   # VERSION:                      LINK:
-    openssh-server \            # VERSION:                      LINK:
-    pbzip2 \                    # VERSION:                      LINK:
-    pgplot5 \                   # VERSION:                      LINK:
-    pkgconf \                   # VERSION:                      LINK:
-    pkg-config \                # VERSION:                      LINK:
-    python-qt4-dev \            # VERSION:                      LINK:
-    pyqt4-dev-tools \           # VERSION:                      LINK:
-    vim \                       # VERSION:                      LINK:
-    wget \                      # VERSION:                      LINK:
-    screen \                    # VERSION:                      LINK:
-    subversion \                # VERSION:                      LINK:
-    swig \                      # VERSION:                      LINK:
-    swig2.0 \                   # VERSION:                      LINK:
-    tcsh \                      # VERSION:                      LINK:
-    tk \                        # VERSION:                      LINK:
-    tk-dev \                    # VERSION:                      LINK:
-    tmux \                      # VERSION:                      LINK:
-    python-pip \                # VERSION:                      LINK:
-    ca-certificates \           # VERSION:                      LINK:
-    curl                        # VERSION:                      LINK:
 
-# Install python modules
-RUN pip install pip -U && \
-    pip install setuptools -U && \
-    pip install numpy -U && \
-    pip install scipy -U && \
-    pip install fitsio -U && \
-    pip install astropy -U && \
-    pip install astroplan -U && \
-    pip install pyfits -U && \
-    pip install matplotlib -U && \
-    pip install pyephem -U
+    # **************************************************
+    #
+    # OS tools
+    #
+    # **************************************************
+
+    # VERSION: 6.18.01
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/tcsh-6.18.01-8.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # Tcsh is an enhanced but completely compatible version of csh, the C shell.
+    tcsh \
+
+    # VERSION: 6.0
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/unzip-6.0-15.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # The unzip utility is used to list, test, or extract files from a zip archive.
+    unzip \
+
+    # VERSION: 1.14
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/wget-1.14-10.el7_0.1.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # GNU Wget is a file retrieval utility which can use either the HTTP or FTP protocols.
+    wget \
+
+    # **************************************************
+    #
+    # Compilation / Dev tools
+    #
+    # **************************************************
+
+    # VERSION: 2.8.11
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/cmake-2.8.11-5.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # CMake is used to control the software compilation process using simple platform
+    # and compiler independent configuration files.
+    make \
+
+    # VERSION: 2.69
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/autoconf-2.69-11.el7.noarch.rpm.html
+    #
+    # DESCRIPTION:
+    # GNU's Autoconf is a tool for configuring source code and Makefiles.
+    autoconf \
+
+    # VERSION: 1.13.4
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/automake-1.13.4-3.el7.noarch.rpm.html
+    #
+    # DESCRIPTION:
+    # Automake is a tool for automatically generating `Makefile.in' files compliant with
+    # the GNU Coding Standards.
+    automake \
+
+    # VERSION: 4.8.5
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gcc-4.8.5-4.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # The gcc package contains the GNU Compiler Collection version 4.8. You'll need this
+    # package in order to compile C code.
+    gcc \
+
+    # VERSION: 4.8.5
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gcc-gfortran-4.8.5-4.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # The gcc-gfortran package provides support for compiling Fortran programs with the GNU
+    # Compiler Collection.
+    gcc-gfortran \
+
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD TEMPO
+    #
+    ##########################################################################################
+
+    # VERSION: 2.4.2
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/libtool-ltdl-2.4.2-20.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The libtool-ltdl package contains the GNU Libtool Dynamic Module Loader, a library that
+    # provides a consistent, portable interface which simplifies the process of using dynamic
+    # modules.
+    libtool \
+
+    # VERSION: 4.8.5
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gcc-c++-4.8.5-4.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # This package adds C++ support to the GNU Compiler Collection. It includes support for
+    # most of the current C++ specification, including templates and exception handling.
+    gcc-c++ \
+
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD TEMPO 2
+    #
+    ##########################################################################################
+
+    # VERSION: 3.370
+    # LINK: https://pkgs.org/centos-7/epel-x86_64/cfitsio-3.370-1.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # CFITSIO is a library of C and FORTRAN subroutines for reading and writing data
+    # files in FITS (Flexible Image Transport System) data format.
+    cfitsio \
+    cfitsio-devel \
+
+    # VERSION: 3.3.3
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/fftw-devel-3.3.3-8.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # FFTW is a C subroutine library for computing the Discrete Fourier Transform (DFT) in
+    # one or more dimensions, of both real and complex data, and of arbitrary input size.
+    fftw-devel \
+
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD SIGPROC
+    #
+    ##########################################################################################
+
+    # VERSION: 2.17
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/glibc-2.17-105.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The glibc package contains standard libraries which are used by multiple programs
+    # on the system.
+    glibc \
+    glibc-devel \
+
+    # VERSION: 7.1.0
+    # LINK: https://pkgs.org/centos-7/epel-x86_64/python-pip-7.1.0-1.el7.noarch.rpm.html
+    #
+    # DESCRIPTION:
+    # Pip is a replacement for 'easy_install'.
+    python-pip \
+    python-devel
+
+    # Install python modules
+    RUN pip install --upgrade pip
+    RUN pip install pip -U
+    RUN pip install setuptools -U
+    RUN pip install numpy -U
+    RUN pip install scipy -U
+    RUN pip install fitsio -U
+    RUN pip install astropy -U
+    RUN pip install astroplan -U
+    RUN pip install pyfits -U
+    RUN pip install matplotlib -U
+    RUN pip install pyephem -U
+
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD PRESTO
+    #
+    ##########################################################################################
+
+##############################################################################################
+# Install software repositories
+##############################################################################################
+
+
 
 ##############################################################################################
 # Setup environment variables
 ##############################################################################################
 
-ENV PSRHOME=/home/psr/soft
-
 # Make the directory where software will be installed. Note the -p flag tells mkdir to
 # also create parent directories as required.
 RUN mkdir -p /home/psr/soft
 
-# Define home, psrhome, software, OSTYPE
+# Define home, psrhome, OSTYPE
 ENV HOME=/home
+ENV PSRHOME=/home/psr/soft
 ENV OSTYPE=linux
 
 # Python packages
 ENV PYTHONPATH=$HOME/ve/lib/python2.7/site-packages
 
-
-# PGPLOT
-ENV PGPLOT_DIR=/usr/lib/pgplot5
-ENV PGPLOT_FONT=/usr/lib/pgplot5/grfont.dat
-ENV PGPLOT_INCLUDES=/usr/include
-ENV PGPLOT_BACKGROUND=white
-ENV PGPLOT_FOREGROUND=black
-ENV PGPLOT_DEV=/xs
-
-
-# calceph
-ENV PATH=$PATH:$PSRHOME/calceph-2.2.4/install/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/calceph-2.2.4/install/lib
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/calceph-2.2.4/install/include
-
-
-# ds9
-ENV PATH=$PATH:$PSRHOME/ds9-7.4
-
-
-# fv
-ENV PATH=$PATH:$PSRHOME/fv5.4
-
-
 # psrcat
 ENV PSRCAT_FILE=$PSRHOME/psrcat_tar/psrcat.db
 ENV PATH=$PATH:$PSRHOME/psrcat_tar
 
-
-# tempo
+# Tempo
 ENV TEMPO=$PSRHOME/tempo
 ENV PATH=$PATH:$PSRHOME/tempo/bin
 
-
-# tempo2
+# Tempo2
 ENV TEMPO2=$PSRHOME/tempo2/T2runtime
 ENV PATH=$PATH:$PSRHOME/tempo2/T2runtime/bin
 ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
 
-
-# PSRCHIVE
-ENV PSRCHIVE=$PSRHOME/psrchive
-ENV PATH=$PATH:$PSRCHIVE/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRCHIVE/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRCHIVE/install/lib
-ENV PYTHONPATH=$PYTHONPATH:$PSRCHIVE/install/lib/python2.7/site-packages
-
-
-# SOFA C-library
-ENV SOFA=$PSRHOME/sofa
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$SOFA/20160503/c/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SOFA/20160503/c/install/lib
-
-
-# SOFA FORTRAN-library
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SOFA/20160503/f77/install/lib
-
-
 # SIGPROC
-# These flags assist with the Sigproc comilation process, so do not remove them. If you take
+# These flags assist with the Sigproc compilation process, so do not remove them. If you take
 # them out, then Sigproc will not build correctly.
 ENV SIGPROC=$PSRHOME/sigproc
 ENV PATH=$PATH:$SIGPROC/install/bin
@@ -263,281 +246,18 @@ ENV F77=gfortran
 ENV CC=gcc
 ENV CXX=g++
 
-
-# sigpyproc
-ENV SIGPYPROC=$PSRHOME/sigpyproc
-ENV PYTHONPATH=$PYTHONPATH:$SIGPYPROC/lib/python
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SIGPYPROC/lib/c
-
-
-# CUB
-ENV CUB=$PSRHOME:cub-1.5.2
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH/$CUB
-
-
-# PSRDADA
-ENV PSRDADA=$PSRHOME/psrdada
-ENV PATH=$PATH:$PSRDADA/install/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRDADA/install/lib
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRDADA/install/include
-ENV CUDA_NVCC_FLAGS="-O3 -arch sm_30 -m64 -lineinfo -I$PSRHOME/cub-1.5.2"
-
-
-# szlib
-ENV SZIP=$PSRHOME/szip-2.1
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SZIP/install/lib
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$SZIP/install/include
-
-
-# h5check
-ENV H5CHECK=$PSRHOME/h5check-2.0.1
-ENV PATH=$PATH:$H5CHECK/install/bin
-
-
-# DAL
-ENV DAL=$PSRHOME/DAL
-ENV PATH=$PATH:$DAL/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$DAL/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DAL/install/lib
-
-
-# DSPSR
-ENV DSPSR=$PSRHOME/dspsr
-ENV PATH=$PATH:$DSPSR/install/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DSPSR/install/lib
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$DSPSR/install/include
-
-
-# clig
-ENV CLIG=$PSRHOME/clig
-ENV PATH=$PATH:$CLIG/instal/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLIG/instal/lib
-
-
-# CLooG
-ENV CLOOG=$PSRHOME/cloog-0.18.4
-ENV PATH=$PATH:$CLOOG/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$CLOOG/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLOOG/install/lib
-
-
-# Ctags
-ENV CTAGS=$PSRHOME/ctags-5.8
-ENV PATH=$PATH:$CTAGS/install/bin
-
-
-# GeographicLib
-ENV GEOLIB=$PSRHOME/GeographicLib-1.46
-ENV PATH=$PATH:$GEOLIB/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$GEOLIB/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$GEOLIB/install/lib
-ENV PYTHONPATH=$PYTHONPATH:$GEOLIB/install/lib/python/site-packages
-
-
-# h5edit
-ENV H5EDIT=$PSRHOME/h5edit-1.3.1
-ENV PATH=$PATH:$H5EDIT/install/bin
-
-
-# Leptonica
-ENV LEPTONICA=$PSRHOME/leptonica-1.73
-ENV PATH=$PATH:$LEPTONICA/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$LEPTONICA/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LEPTONICA/install/lib
-
-
-# tvmet
-ENV TVMET=$PSRHOME/tvmet-1.7.2
-ENV PATH=$PATH:$TVMET/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$TVMET/install/include
-
-
-# FFTW2
-ENV FFTW2=$PSRHOME/fftw-2.1.5
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$FFTW2/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$FFTW2/install/lib
-
-
-# fitsverify
-ENV FITSVERIFY=$PSRHOME/fitsverify
-ENV PATH=$PATH:$FITSVERIFY
-
-
-# PSRSALSA
-ENV PSRSALSA=$PSRHOME/psrsalsa
-ENV PATH=$PATH:$PSRSALSA/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRSALSA/src/lib
-
-
-# pypsrfits
-ENV PYPSRFITS=$PSRHOME/pypsrfits
-
-
 # PRESTO
 ENV PRESTO=$PSRHOME/presto
 ENV PATH=$PATH:$PRESTO/bin
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PRESTO/lib
 ENV PYTHONPATH=$PYTHONPATH:$PRESTO/lib/python
 
-
-# wapp2psrfits
-ENV WAPP2PSRFITS=$PSRHOME/wapp2psrfits
-ENV PATH=$PATH:$WAPP2PSRFITS
-
-
-# psrfits2psrfits
-ENV PSRFITS2PSRFITS=$PSRHOME/psrfits2psrfits
-ENV PATH=$PATH:$PSRFITS2PSRFITS
-
-
-# psrfits_utils
-ENV PSRFITS_UTILS=$PSRHOME/psrfits_utils
-ENV PATH=$PATH:$PSRFITS_UTILS/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRFITS_UTILS/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRFITS_UTILS/install/lib
-
-
-# pyslalib
-ENV PYSLALIB=$PSRHOME/pyslalib
-ENV VPSR=$PSRHOME/Vpsr
-
-
-# Vpsr
-ENV PATH=$PATH:$VPSR
-
-
-# GPy
-ENV GPY=$PSRHOME/GPy
-ENV PATH=$PATH:$GPY
-
-
-# katversion
-ENV KATVERSION=$PSRHOME/katversion
-
-
-# katpoint
-ENV KATPOINT=$PSRHOME/katpoint
-
-
-# katdal
-ENV KATDAL=$PSRHOME/katdal
-
-
-# katconfig
-ENV KATCONFIG=$PSRHOME/katconfig
-
-
-# katsdpscripts
-ENV KATSDPSCRIPTS=$PSRHOME/katsdpscripts
-
-
-# katsdpinfrastructure
-ENV KATSDPINFRASTRUCTURE=$PSRHOME/katsdpinfrastructure
-
-
-# katpulse
-ENV KATPULSE=$PSRHOME/katpulse
-
-
-# casacore measures_data
-ENV MEASURES_DATA=$PSRHOME/measures_data
-
-
-# casa
-ENV CASA=$PSRHOME/casa-release-4.6.0-el6
-ENV PATH=$PATH:$PSRHOME/casa-release-4.6.0-el6/bin
-
-
-# casacore
-ENV CASACORE=$PSRHOME/casacore
-ENV PATH=$PATH:$CASACORE/build/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$CASACORE/build/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CASACORE/build/install/lib
-
-
-# python-casacore
-ENV PYTHON_CASACORE=$PSRHOME/python-casacore
-
-
-# makems
-ENV MAKEMS=$PSRHOME/makems
-ENV PATH=$PATH:$MAKEMS/LOFAR/installed/gnu_opt/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$MAKEMS/LOFAR/installed/gnu_opt/LOFAR/installed/gnu_opt/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MAKEMS/LOFAR/installed/gnu_opt/lib64
-
-
-# wsclean
-ENV WSCLEAN=$PSRHOME/wsclean-1.12
-ENV PATH=$PATH:$WSCLEAN/build/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$WSCLEAN/build/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WSCLEAN/build/install/lib
-
-
-# coast_guard
-ENV COAST_GUARD=$PSRHOME/coast_guard
-ENV PATH=$PATH:$COAST_GUARD
-ENV COASTGUARD_CFG=$COAST_GUARD/configurations
-ENV PYTHONPATH=$PYTHONPATH:$COAST_GUARD
-
-# Downloading all source codes
-RUN git clone https://github.com/SixByNine/sigproc.git
-RUN git clone https://github.com/scottransom/presto.git
-RUN git clone git://git.code.sf.net/p/tempo/tempo
-RUN mv /home/sigproc /home/psr/soft/sigproc
-RUN mv /home/presto /home/psr/soft/presto
-RUN mv /home/tempo /home/psr/soft/tempo
-RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
-RUN mv /home/tempo2 /home/psr/soft/tempo2
-
-
-##############################################################################################
-# CUDA Drivers
-#
-# This part of the docker file was taken from the Nvidia Github respository, credit goes
-# to the NVIDIA CORPORATION <digits@nvidia.com> for this. Please see the following link
-# for more information: https://github.com/NVIDIA/nvidia-docker
-##############################################################################################
-
-ENV CUDA_VERSION 8.0
-LABEL com.nvidia.cuda.version="8.0"
-
-ENV CUDA_DOWNLOAD_SUM 58a5f8e6e8bf6515c55fd99e38b1a617142e556c70679cf563f30f972bbdd811
-
-ENV CUDA_PKG_VERSION 8-0=8.0.27-1
-RUN curl -o cuda-repo.deb -fsSL http://developer.download.nvidia.com/compute/cuda/8.0/direct/cuda-repo-ubuntu1404-8-0-rc_8.0.27-1_amd64.deb && \
-    echo "$CUDA_DOWNLOAD_SUM  cuda-repo.deb" | sha256sum -c --strict - && \
-    dpkg -i cuda-repo.deb && \
-    rm cuda-repo.deb && \
-    apt-get update && apt-get install -y --no-install-recommends \
-        cuda-nvrtc-$CUDA_PKG_VERSION \
-        cuda-nvgraph-$CUDA_PKG_VERSION \
-        cuda-cusolver-$CUDA_PKG_VERSION \
-        cuda-cublas-$CUDA_PKG_VERSION \
-        cuda-cufft-$CUDA_PKG_VERSION \
-        cuda-curand-$CUDA_PKG_VERSION \
-        cuda-cusparse-$CUDA_PKG_VERSION \
-        cuda-npp-$CUDA_PKG_VERSION \
-        cuda-cudart-$CUDA_PKG_VERSION && \
-    ln -s cuda-$CUDA_VERSION /usr/local/cuda && \
-    apt-get remove --purge -y cuda-repo-ubuntu1404-8-0-rc && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
-    echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
-    ldconfig
-
-RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
-    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
-
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
-
 ##############################################################################################
 # TEST VECTOR PIPELINE + README Setup
 ##############################################################################################
 # Download test vector files
 WORKDIR /home
-RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/DockerImageReadme.txt
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Images/tvg/CentOS/DockerImageReadme.txt
 
 WORKDIR $PSRHOME
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/pulsar_injection_pipeline.zip
@@ -553,6 +273,47 @@ RUN mkdir /home/psr/soft/evh
 WORKDIR $PSRHOME/evh
 RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/README.txt
 RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/ersatz.py
+
+##############################################################################################
+# PULSAR SOFTWARE PIPELINE
+##############################################################################################
+WORKDIR /home
+
+# Downloading pulsar software source codes. Here I've tried to version the software
+# used, so we know all about our container environment. However some of the pulsar tools
+# are not versioned explcitly. So to make sure we always have the same version of the
+# pulsar tools in each image, versions of the software have been packaged and stored,
+# in my github repository. It is these versions of the software that will be installed
+# each time.
+
+# Download the software
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Presto_SNAPSHOT_08_12_2016.zip
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Sigproc_MJK_SNAPSHOT_08_12_2016.zip
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Tempo_SNAPSHOT_08_12_2016.zip
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip
+
+# Unzip the software
+RUN unzip Presto_SNAPSHOT_08_12_2016.zip -d /home/Presto_SNAPSHOT_08_12_2016
+RUN unzip Sigproc_MJK_SNAPSHOT_08_12_2016.zip -d /home/Sigproc_MJK_SNAPSHOT_08_12_2016
+RUN unzip Tempo_SNAPSHOT_08_12_2016.zip -d /home/Tempo_SNAPSHOT_08_12_2016
+RUN unzip Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip -d /home/Tempo2_2016.11.3_SNAPSHOT_08_12_2016
+
+# Remove zip files
+RUN rm Presto_SNAPSHOT_08_12_2016.zip
+RUN rm Sigproc_MJK_SNAPSHOT_08_12_2016.zip
+RUN rm Tempo_SNAPSHOT_08_12_2016.zip
+RUN rm Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip
+
+# Move the software to the correct folder location
+RUN mv /home/Sigproc_MJK_SNAPSHOT_08_12_2016 /home/psr/soft/sigproc
+RUN mv /home/Presto_SNAPSHOT_08_12_2016 /home/psr/soft/presto
+RUN mv /home/Tempo_SNAPSHOT_08_12_2016 /home/psr/soft/tempo
+RUN mv /home/Tempo2_2016.11.3_SNAPSHOT_08_12_2016 /home/psr/soft/tempo2
+
+RUN rm /home/psr/soft/sigproc/__MACOSX -R
+RUN rm /home/psr/soft/presto/__MACOSX -R
+RUN rm /home/psr/soft/tempo/__MACOSX -R
+RUN rm /home/psr/soft/tempo2/__MACOSX -R
 
 ##############################################################################################
 # TEMPO Installation
@@ -571,7 +332,6 @@ RUN ./prepare && \
 # Ok here we install the latest version of TEMPO2.
 
 WORKDIR $PSRHOME/tempo2
-RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap # Get rid of: returned a non-zero code: 126.
 RUN ./bootstrap && \
     ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared --enable-static --with-pic F77=gfortran && \
     make && \
@@ -597,17 +357,47 @@ RUN ./bootstrap && \
     make install
 
 ##############################################################################################
-# PRESTO Installation
+# CUDA Drivers
+#
+# This part of the docker file was taken from the Nvidia Github respository, credit goes
+# to the NVIDIA CORPORATION <digits@nvidia.com> for this. Please see the following link
+# for more information: https://github.com/NVIDIA/nvidia-docker
 ##############################################################################################
-WORKDIR $PRESTO/src
-#RUN make makewisdom
-RUN make prep && \
-    make
-WORKDIR $PRESTO/python/ppgplot_src
-RUN mv _ppgplot.c _ppgplot.c_ORIGINAL && \
-    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/ppgplot/_ppgplot.c
-WORKDIR $PRESTO/python
-RUN make
+
+LABEL com.nvidia.volumes.needed="nvidia_driver"
+
+RUN NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5 && \
+    curl -fsSL http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/7fa2af80.pub | sed '/^Version/d' > /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA && \
+    echo "$NVIDIA_GPGKEY_SUM  /etc/pki/rpm-gpg/RPM-GPG-KEY-NVIDIA" | sha256sum -c --strict -
+
+COPY cuda.repo /etc/yum.repos.d/cuda.repo
+
+ENV CUDA_VERSION 8.0
+LABEL com.nvidia.cuda.version="8.0"
+
+ENV CUDA_PKG_VERSION 8-0-8.0.44-1
+RUN yum install -y \
+        cuda-nvrtc-$CUDA_PKG_VERSION \
+        cuda-nvgraph-$CUDA_PKG_VERSION \
+        cuda-cusolver-$CUDA_PKG_VERSION \
+        cuda-cublas-$CUDA_PKG_VERSION \
+        cuda-cufft-$CUDA_PKG_VERSION \
+        cuda-curand-$CUDA_PKG_VERSION \
+        cuda-cusparse-$CUDA_PKG_VERSION \
+        cuda-npp-$CUDA_PKG_VERSION \
+        cuda-cudart-$CUDA_PKG_VERSION && \
+    ln -s cuda-$CUDA_VERSION /usr/local/cuda && \
+    rm -rf /var/cache/yum/*
+
+RUN echo "/usr/local/cuda/lib" >> /etc/ld.so.conf.d/cuda.conf && \
+    echo "/usr/local/cuda/lib64" >> /etc/ld.so.conf.d/cuda.conf && \
+    ldconfig
+
+RUN echo "/usr/local/nvidia/lib" >> /etc/ld.so.conf.d/nvidia.conf && \
+    echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
+
+ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
 ##############################################################################################
 # Finally...

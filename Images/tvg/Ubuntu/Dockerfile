@@ -565,7 +565,7 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_P
 ##############################################################################################
 # Download test vector files
 WORKDIR /home
-RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/DockerImageReadme.txt
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Images/tvg/Ubuntu/DockerImageReadme.txt
 
 WORKDIR $PSRHOME
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/pulsar_injection_pipeline.zip
