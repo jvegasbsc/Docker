@@ -42,15 +42,6 @@ WORKDIR /home
 # Install 'OS' software.
 ##############################################################################################
 
-# Run due to CentOS bug.
-RUN yum groups mark convert
-
-# Now run repository setup and group software install.
-RUN yum group list
-RUN yum -y install epel-release
-RUN yum repolist
-RUN yum -y groupinstall "Development Tools"
-
 RUN yum -y update && yum -y install \
 
     # **************************************************
@@ -59,14 +50,6 @@ RUN yum -y update && yum -y install \
     #
     # **************************************************
 
-    # VERSION: 7.1.0
-    # LINK: https://pkgs.org/centos-7/epel-x86_64/python-pip-7.1.0-1.el7.noarch.rpm.html
-    #
-    # DESCRIPTION:
-    # Pip is a replacement for 'easy_install'.
-    python-pip \
-    python-devel \
-
     # VERSION: 6.18.01
     # LINK: https://pkgs.org/centos-7/centos-x86_64/tcsh-6.18.01-8.el7.x86_64.rpm.html
     #
@@ -74,38 +57,70 @@ RUN yum -y update && yum -y install \
     # Tcsh is an enhanced but completely compatible version of csh, the C shell.
     tcsh \
 
+    # VERSION: 6.0
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/unzip-6.0-15.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # The unzip utility is used to list, test, or extract files from a zip archive.
+    unzip \
+
     # VERSION: 1.14
     # LINK: https://pkgs.org/centos-7/centos-x86_64/wget-1.14-10.el7_0.1.x86_64.rpm.html
     #
     # DESCRIPTION:
     # GNU Wget is a file retrieval utility which can use either the HTTP or FTP protocols.
-    wget
+    wget \
+
+    # **************************************************
+    #
+    # Compilation / Dev tools
+    #
+    # **************************************************
+
+    # VERSION: 2.8.11
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/cmake-2.8.11-5.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # CMake is used to control the software compilation process using simple platform
+    # and compiler independent configuration files.
+    make \
+
+    # VERSION: 2.69
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/autoconf-2.69-11.el7.noarch.rpm.html
+    #
+    # DESCRIPTION:
+    # GNU's Autoconf is a tool for configuring source code and Makefiles.
+    autoconf \
+
+    # VERSION: 1.13.4
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/automake-1.13.4-3.el7.noarch.rpm.html
+    #
+    # DESCRIPTION:
+    # Automake is a tool for automatically generating `Makefile.in' files compliant with
+    # the GNU Coding Standards.
+    automake \
+
+    # VERSION: 4.8.5
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gcc-4.8.5-4.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # The gcc package contains the GNU Compiler Collection version 4.8. You'll need this
+    # package in order to compile C code.
+    gcc \
+
+    # VERSION: 4.8.5
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gcc-gfortran-4.8.5-4.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # The gcc-gfortran package provides support for compiling Fortran programs with the GNU
+    # Compiler Collection.
+    gcc-gfortran
 
 ##############################################################################################
 # Install software repositories
 ##############################################################################################
 
-WORKDIR /home
-RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/CentOS/springdale-computational.repo
-RUN mv springdale-computational.repo /etc/yum.repos.d/springdale-computational.repo
 
-WORKDIR /home
-
-RUN yum -y update
-# springdale-computational
-
-# Install python modules
-RUN pip install --upgrade pip
-RUN pip install pip -U
-RUN pip install setuptools -U
-RUN pip install numpy -U
-RUN pip install scipy -U
-RUN pip install fitsio -U
-RUN pip install astropy -U
-RUN pip install astroplan -U
-RUN pip install pyfits -U
-RUN pip install matplotlib -U
-RUN pip install pyephem -U
 
 ##############################################################################################
 # Setup environment variables
@@ -123,6 +138,10 @@ ENV OSTYPE=linux
 
 # Python packages
 ENV PYTHONPATH=$HOME/ve/lib/python2.7/site-packages
+
+# Tempo
+ENV TEMPO=$PSRHOME/tempo
+ENV PATH=$PATH:$PSRHOME/tempo/bin
 
 ##############################################################################################
 # TEST VECTOR PIPELINE + README Setup
@@ -156,13 +175,10 @@ RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Sof
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip
 
 # Unzip the software
-RUN unzip Presto_SNAPSHOT_08_12_2016.zip -d /home
-RUN unzip Sigproc_MJK_SNAPSHOT_08_12_2016.zip -d /home
-RUN unzip Tempo_SNAPSHOT_08_12_2016.zip -d /home
-RUN unzip Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip -d /home
-
-# Remove any meta files caused by building zip files on OSX.
-RUN rm __MACOSX -R
+RUN unzip Presto_SNAPSHOT_08_12_2016.zip -d /home/Presto_SNAPSHOT_08_12_2016
+RUN unzip Sigproc_MJK_SNAPSHOT_08_12_2016.zip -d /home/Sigproc_MJK_SNAPSHOT_08_12_2016
+RUN unzip Tempo_SNAPSHOT_08_12_2016.zip -d /home/Tempo_SNAPSHOT_08_12_2016
+RUN unzip Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip -d /home/Tempo2_2016.11.3_SNAPSHOT_08_12_2016
 
 # Remove zip files
 RUN rm Presto_SNAPSHOT_08_12_2016.zip
@@ -175,6 +191,40 @@ RUN mv /home/Sigproc_MJK_SNAPSHOT_08_12_2016 /home/psr/soft/sigproc
 RUN mv /home/Presto_SNAPSHOT_08_12_2016 /home/psr/soft/presto
 RUN mv /home/Tempo_SNAPSHOT_08_12_2016 /home/psr/soft/tempo
 RUN mv /home/Tempo2_2016.11.3_SNAPSHOT_08_12_2016 /home/psr/soft/tempo2
+
+RUN rm /home/psr/soft/sigproc/__MACOSX -R
+RUN rm /home/psr/soft/presto/__MACOSX -R
+RUN rm /home/psr/soft/tempo/__MACOSX -R
+RUN rm /home/psr/soft/tempo2/__MACOSX -R
+
+##############################################################################################
+# TEMPO Installation
+##############################################################################################
+WORKDIR $PSRHOME/tempo
+RUN ./prepare && \
+    ./configure --prefix=$PSRHOME/tempo && \
+    make && \
+    make install && \
+    mv obsys.dat obsys.dat_ORIGINAL && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo/obsys.dat
+
+##############################################################################################
+# TEMPO2 Installation
+##############################################################################################
+# Ok here we install the latest version of TEMPO2.
+
+WORKDIR $PSRHOME/tempo2
+RUN ./bootstrap && \
+    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared --enable-static --with-pic F77=gfortran && \
+    make && \
+    make install && \
+    make plugins-install
+WORKDIR $PSRHOME/tempo2/T2runtime/observatory
+RUN mv observatories.dat observatories.dat_ORIGINAL && \
+    mv oldcodes.dat oldcodes.dat_ORIGINAL && \
+    mv aliases aliases_ORIGINAL && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/observatories.dat && \
+    wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/aliases
 
 ##############################################################################################
 # Finally...

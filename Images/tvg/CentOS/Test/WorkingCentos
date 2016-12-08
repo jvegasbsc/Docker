@@ -463,7 +463,7 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRCHIVE/install/lib
 ENV PYTHONPATH=$PYTHONPATH:$PSRCHIVE/install/lib/python2.7/site-packages
 
 # SIGPROC
-# These flags assist with the Sigproc comilation process, so do not remove them. If you take
+# These flags assist with the Sigproc compilation process, so do not remove them. If you take
 # them out, then Sigproc will not build correctly.
 ENV SIGPROC=$PSRHOME/sigproc
 ENV PATH=$PATH:$SIGPROC/install/bin
