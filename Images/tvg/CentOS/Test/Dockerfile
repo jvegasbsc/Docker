@@ -44,6 +44,12 @@ WORKDIR /home
 
 RUN yum -y update && yum -y install \
 
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD TEMPO
+    #
+    ##########################################################################################
+
     # **************************************************
     #
     # OS tools
@@ -114,7 +120,30 @@ RUN yum -y update && yum -y install \
     # DESCRIPTION:
     # The gcc-gfortran package provides support for compiling Fortran programs with the GNU
     # Compiler Collection.
-    gcc-gfortran
+    gcc-gfortran \
+
+    ##########################################################################################
+    #
+    # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD TEMPO 2
+    #
+    ##########################################################################################
+
+    # VERSION: 2.4.2
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/libtool-ltdl-2.4.2-20.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The libtool-ltdl package contains the GNU Libtool Dynamic Module Loader, a library that
+    # provides a consistent, portable interface which simplifies the process of using dynamic
+    # modules.
+    libtool \
+
+    # VERSION: 4.8.5
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/gcc-c++-4.8.5-4.el7.x86_64.rpm.html
+    #
+    # DESCRIPTION:
+    # This package adds C++ support to the GNU Compiler Collection. It includes support for
+    # most of the current C++ specification, including templates and exception handling.
+    gcc-c++
 
 ##############################################################################################
 # Install software repositories
@@ -126,14 +155,13 @@ RUN yum -y update && yum -y install \
 # Setup environment variables
 ##############################################################################################
 
-ENV PSRHOME=/home/psr/soft
-
 # Make the directory where software will be installed. Note the -p flag tells mkdir to
 # also create parent directories as required.
 RUN mkdir -p /home/psr/soft
 
-# Define home, psrhome, software, OSTYPE
+# Define home, psrhome, OSTYPE
 ENV HOME=/home
+ENV PSRHOME=/home/psr/soft
 ENV OSTYPE=linux
 
 # Python packages
@@ -142,6 +170,22 @@ ENV PYTHONPATH=$HOME/ve/lib/python2.7/site-packages
 # Tempo
 ENV TEMPO=$PSRHOME/tempo
 ENV PATH=$PATH:$PSRHOME/tempo/bin
+
+# Tempo2
+ENV TEMPO2=$PSRHOME/tempo2/T2runtime
+ENV PATH=$PATH:$PSRHOME/tempo2/T2runtime/bin
+ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
+
+# SIGPROC
+# These flags assist with the Sigproc compilation process, so do not remove them. If you take
+# them out, then Sigproc will not build correctly.
+ENV SIGPROC=$PSRHOME/sigproc
+ENV PATH=$PATH:$SIGPROC/install/bin
+ENV FC=gfortran
+ENV F77=gfortran
+ENV CC=gcc
+ENV CXX=g++
 
 ##############################################################################################
 # TEST VECTOR PIPELINE + README Setup
@@ -225,6 +269,8 @@ RUN mv observatories.dat observatories.dat_ORIGINAL && \
     mv aliases aliases_ORIGINAL && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/observatories.dat && \
     wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/tempo2/aliases
+
+
 
 ##############################################################################################
 # Finally...
