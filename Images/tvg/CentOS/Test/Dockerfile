@@ -21,7 +21,7 @@
 # inject_pulsar
 # pgplot
 # python 2.6 (scipy, numpy stacks).
-# fftw
+# fftw 2 and 3
 # dev tools (gfortran etc.)
 #
 #
@@ -48,8 +48,8 @@ RUN yum groups mark convert
 # Now run repository setup and group software install.
 RUN yum group list
 RUN yum -y install epel-release
+RUN yum repolist
 RUN yum -y groupinstall "Development Tools"
-RUN yum -y groupinstall "X11"
 
 RUN yum -y update && yum -y install \
 
@@ -59,108 +59,13 @@ RUN yum -y update && yum -y install \
     #
     # **************************************************
 
-    # VERSION: bc-1.06.95-13.el7.x86_64.rpm
-    # LINK: https://pkgs.org/download/bc
-    #
-    # DESCRIPTION:
-    # The bc package includes bc and dc. Bc is an arbitrary precision numeric processing
-    # arithmetic language. Dc is an interactive arbitrary precision stack based calculator,
-    # which can be used as a text mode calculator.
-    bc \
-
-    # VERSION: 2.8.11
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/cmake-2.8.11-5.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # CMake is used to control the software compilation process using simple platform and
-    # compiler independent configuration files. CMake generates native makefiles and workspaces
-    # that can be used in the compiler environment of your choice.
-    cmake \                
-
-    # VERSION: 2.2.0.3
-    # LINK: https://pkgs.org/centos-7/epel-x86_64/dkms-2.2.0.3-34.git.9e0394d.el7.noarch.rpm.html
-    #
-    # DESCRIPTION:
-    # This package contains the framework for the Dynamic Kernel Module Support (DKMS) method for
-    # installing module RPMS as originally developed by Dell.
-    dkms \
-
-    # VERSION: 1.15
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/gsl-1.15-13.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # The GNU Scientific Library (GSL) is a collection of routines for numerical
-    # analysis, written in C.
-    gsl \
-    gsl-devel \
-
-    # VERSION: 2.0.2
-    # LINK: https://pkgs.org/centos-7/epel-x86_64/htop-2.0.2-1.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # htop is an interactive text-mode process viewer for Linux, similar to top.
-    htop \
-
-    # VERSION: 1.7
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/hwloc-1.7-5.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # The Portable Hardware Locality (hwloc) software package provides a portable
-    # abstraction (across OS, versions, architectures, ...) of the hierarchical
-    # topology of modern architectures, including NUMA memory nodes, shared caches,
-    # processor sockets, processor cores and processing units (logical processors or
-    # "threads"). It also gathers various system attributes such as cache and memory
-    # information. It primarily aims at helping applications with gathering information
-    # about modern computing hardware so as to exploit it accordingly and efficiently.
-    hwloc \
-    hwloc-devel \
-
-    # VERSION: 2.4.2
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/libtool-ltdl-2.4.2-20.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # The libtool-ltdl package contains the GNU Libtool Dynamic Module Loader, a library that
-    # provides a consistent, portable interface which simplifies the process of using dynamic
-    # modules.
-    libtool-ltdl \
-    libtool-ltdl-devel \
-
-    # VERSION: 4.8.7
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/mc-4.8.7-8.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # Midnight Commander is a visual shell much like a file manager, only with many more features.
-    mc \
-
-    # VERSION: 2.3.1
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/nano-2.3.1-10.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # GNU nano is a small and friendly text editor.
-    nano \
-
-    # VERSION: 5.9
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/ncurses-5.9-13.20130511.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # The curses library routines are a terminal-independent method of updating character screens
-    # with reasonable optimization.
-    ncurses \
-    ncurses-devel \
-
     # VERSION: 7.1.0
     # LINK: https://pkgs.org/centos-7/epel-x86_64/python-pip-7.1.0-1.el7.noarch.rpm.html
     #
     # DESCRIPTION:
     # Pip is a replacement for 'easy_install'.
     python-pip \
-
-    # VERSION: 4.1.0
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/screen-4.1.0-0.21.20120314git3c2946.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # The screen utility allows you to have multiple logins on just one terminal.
-    screen \
+    python-devel \
 
     # VERSION: 6.18.01
     # LINK: https://pkgs.org/centos-7/centos-x86_64/tcsh-6.18.01-8.el7.x86_64.rpm.html
@@ -174,235 +79,7 @@ RUN yum -y update && yum -y install \
     #
     # DESCRIPTION:
     # GNU Wget is a file retrieval utility which can use either the HTTP or FTP protocols.
-    wget \
-
-    # **************************************************
-    #
-    # Fortran
-    #
-    # **************************************************
-
-    # VERSION: 5.1.4
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/lua-5.1.4-14.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # Lua is a powerful light-weight programming language designed for extending applications.
-    lua \
-    lua-devel \
-
-    # **************************************************
-    #
-    # Fortran
-    #
-    # **************************************************
-
-    # VERSION: 4.8.5
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/gcc-gfortran-4.8.5-4.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # The gcc-gfortran package provides support for compiling Fortran programs with the
-    # GNU Compiler Collection.
-    gcc-gfortran \
-
-    # VERSION: 3.4.6
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/compat-libf2c-34-3.4.6-32.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # This package contains Fortran 77 shared library which is needed to run Fortran 77
-    # dynamically linked programs built by g77 3.4.x.
-    compat-libf2c-34 \     
-
-    # **************************************************
-    #
-    # C / C++
-    #
-    # **************************************************
-
-    # VERSION: 4.8.5
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/cpp-4.8.5-4.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # Cpp is the GNU C-Compatible Compiler Preprocessor. Cpp is a macro processor
-    # which is used automatically by the C compiler to transform your program before
-    # actual compilation.
-    cpp \
-
-    # VERSION: 1.12.1
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/cppunit-1.12.1-11.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # CppUnit is the C++ port of the famous JUnit framework for unit testing.
-    cppunit \
-    cppunit-devel \
-    subunit-cppunit \
-    subunit-cppunit-devel \
-
-    # VERSION: 1.53.0
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/boost-1.53.0-25.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # Boost provides free peer-reviewed portable C++ source libraries.
-    boost \
-    boost-devel \
-
-    # VERSION: 0.19
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/Cython-0.19-3.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # This is a development version of Pyrex, a language for writing Python extension modules.
-    Cython \
-
-    # VERSION: 2.17
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/glibc-2.17-105.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # The glibc package contains standard libraries which are used by multiple programs
-    # on the system.
-    glibc \
-    glibc-devel \
-
-    # **************************************************
-    #
-    # Pulsar software dependencies
-    #
-    # **************************************************
-
-    # VERSION: 3.370
-    # LINK: https://pkgs.org/centos-7/epel-x86_64/cfitsio-3.370-1.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # CFITSIO is a library of C and FORTRAN subroutines for reading and writing data
-    # files in FITS (Flexible Image Transport System) data format.
-    cfitsio \
-    cfitsio-devel \
-
-    # VERSION: 3.4.2
-    # LINK: https://pkgs.org/search/blas
-    #
-    # DESCRIPTION:
-    # BLAS (Basic Linear Algebra Subprograms) is a standard library which provides a
-    # number of basic algorithms for numerical algebra.
-    blas \
-    blas-devel \
-    blas-static \
-    blas350 \
-    blas350-devel \
-    blas350-static \
-    blas350_64 \
-    blas350_64-static \
-
-    # VERSION: 2.1.5
-    # LINK: https://pkgs.org/centos-7/epel-x86_64/fftw2-2.1.5-26.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # FFTW is a C subroutine library for computing the Discrete Fourier Transform (DFT)
-    # in one or more dimensions, of both real and complex data, and of arbitrary input size.
-    fftw2 \
-
-    # VERSION: 2.1.5
-    # LINK: https://pkgs.org/centos-7/epel-x86_64/fftw2-devel-2.1.5-26.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # This package contains header files and development libraries needed to develop programs
-    # using the FFTW fast Fourier transform library version 2.
-    fftw2-devel \
-
-    # VERSION: 2.0.35
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/gd-2.0.35-26.el7.i686.rpm.html
-
-    # DESCRIPTION:
-    # The gd graphics library allows your code to quickly draw images complete with
-    # lines, arcs, text, multiple colors, cut and paste from other images, and flood
-    # fills, and to write out the result as a PNG or JPEG file.
-    gd \
-    gd-devel \
-
-    # VERSION: 9.07
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/ghostscript-9.07-18.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # Ghostscript is a set of software that provides a PostScript interpreter, a set of C
-    # procedures (the Ghostscript library, which implements the graphics capabilities in
-    # the PostScript language) and an interpreter for Portable Document Format (PDF) files.
-    ghostscript \
-
-    # VERSION: 2.42.2
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/glib2-2.42.2-5.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # GLib is the low-level core library that forms the basis for projects such as GTK+ and GNOME.
-    glib2 \
-    glib2-devel \
-
-    # VERSION: 6.0.0
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/gmp-6.0.0-11.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # The gmp package contains GNU MP, a library for arbitrary precision arithmetic,
-    # signed integers operations, rational numbers and floating point numbers.
-    gmp \
-    gmp-devel \
-
-    # VERSION: 4.6.2
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/gnuplot-4.6.2-3.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # Gnuplot is a command-line driven, interactive function plotting program especially suited
-    # for scientific data representation.
-    gnuplot \
-
-    # VERSION: 1.8.12
-    # LINK: https://pkgs.org/centos-7/epel-x86_64/hdf5-1.8.12-7.el7.x86_64.rpm.html
-    #
-    # DESCRIPTION:
-    # HDF5 is a general purpose library and file format for storing scientific data.
-    hdf5 \
-    hdf5-devel \
-
-    # VERSION: 3.4.2
-    # LINK: https://pkgs.org/centos-7/centos-x86_64/lapack-3.4.2-5.el7.i686.rpm.html
-    #
-    # DESCRIPTION:
-    # LAPACK (Linear Algebra PACKage) is a standard library for numerical linear algebra.
-    # LAPACK provides routines for solving systems of simultaneous linear equations,
-    # least-squares solutions of linear systems of equations, eigenvalue problems, and
-    # singular value problems.
-    lapack \
-    lapack-static \
-    lapack-devel \
-    lapack350 \
-    lapack350-devel \
-    lapack350-static \
-
-    # VERSION:
-    # LINK:
-    #
-    # DESCRIPTION:
-
-    # VERSION:
-    # LINK:
-    #
-    # DESCRIPTION:
-
-    # VERSION:
-    # LINK:
-    #
-    # DESCRIPTION:
-
-    # VERSION:
-    # LINK:
-    #
-    # DESCRIPTION:
-
-    # VERSION:
-    # LINK:
-    #
-    # DESCRIPTION:
-
-    # VERSION:
-    # LINK:
-    #
-    # DESCRIPTION:
+    wget
 
 ##############################################################################################
 # Install software repositories
@@ -414,34 +91,21 @@ RUN mv springdale-computational.repo /etc/yum.repos.d/springdale-computational.r
 
 WORKDIR /home
 
-RUN yum -y update && yum -y install \
-    springdale-computational
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+RUN yum -y update
+# springdale-computational
 
 # Install python modules
-RUN pip install pip -U && \
-    pip install setuptools -U && \
-    pip install numpy -U && \
-    pip install scipy -U && \
-    pip install fitsio -U && \
-    pip install astropy -U && \
-    pip install astroplan -U && \
-    pip install pyfits -U && \
-    pip install matplotlib -U && \
-    pip install pyephem -U
+RUN pip install --upgrade pip
+RUN pip install pip -U
+RUN pip install setuptools -U
+RUN pip install numpy -U
+RUN pip install scipy -U
+RUN pip install fitsio -U
+RUN pip install astropy -U
+RUN pip install astroplan -U
+RUN pip install pyfits -U
+RUN pip install matplotlib -U
+RUN pip install pyephem -U
 
 ##############################################################################################
 # Setup environment variables
@@ -460,115 +124,57 @@ ENV OSTYPE=linux
 # Python packages
 ENV PYTHONPATH=$HOME/ve/lib/python2.7/site-packages
 
-# PGPLOT
-ENV PGPLOT_DIR=/usr/lib/pgplot5
-ENV PGPLOT_FONT=/usr/lib/pgplot5/grfont.dat
-ENV PGPLOT_INCLUDES=/usr/include
-ENV PGPLOT_BACKGROUND=white
-ENV PGPLOT_FOREGROUND=black
-ENV PGPLOT_DEV=/xs
-
-# psrcat
-ENV PSRCAT_FILE=$PSRHOME/psrcat_tar/psrcat.db
-ENV PATH=$PATH:$PSRHOME/psrcat_tar
-
-# tempo
-ENV TEMPO=$PSRHOME/tempo
-ENV PATH=$PATH:$PSRHOME/tempo/bin
-
-# tempo2
-ENV TEMPO2=$PSRHOME/tempo2/T2runtime
-ENV PATH=$PATH:$PSRHOME/tempo2/T2runtime/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/tempo2/T2runtime/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/tempo2/T2runtime/lib
-
-# PSRCHIVE
-ENV PSRCHIVE=$PSRHOME/psrchive
-ENV PATH=$PATH:$PSRCHIVE/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRCHIVE/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRCHIVE/install/lib
-ENV PYTHONPATH=$PYTHONPATH:$PSRCHIVE/install/lib/python2.7/site-packages
-
-# SIGPROC
-# These flags assist with the Sigproc comilation process, so do not remove them. If you take
-# them out, then Sigproc will not build correctly.
-ENV SIGPROC=$PSRHOME/sigproc
-ENV PATH=$PATH:$SIGPROC/install/bin
-ENV FC=gfortran
-ENV F77=gfortran
-ENV CC=gcc
-ENV CXX=g++
-
-# sigpyproc
-ENV SIGPYPROC=$PSRHOME/sigpyproc
-ENV PYTHONPATH=$PYTHONPATH:$SIGPYPROC/lib/python
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SIGPYPROC/lib/c
-
-# DSPSR
-ENV DSPSR=$PSRHOME/dspsr
-ENV PATH=$PATH:$DSPSR/install/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DSPSR/install/lib
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$DSPSR/install/include
-
-# clig
-ENV CLIG=$PSRHOME/clig
-ENV PATH=$PATH:$CLIG/instal/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLIG/instal/lib
-
-# CLooG
-ENV CLOOG=$PSRHOME/cloog-0.18.4
-ENV PATH=$PATH:$CLOOG/install/bin
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$CLOOG/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CLOOG/install/lib
-
-# Ctags
-ENV CTAGS=$PSRHOME/ctags-5.8
-ENV PATH=$PATH:$CTAGS/install/bin
-
-# FFTW2
-ENV FFTW2=$PSRHOME/fftw-2.1.5
-ENV C_INCLUDE_PATH=$C_INCLUDE_PATH:$FFTW2/install/include
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$FFTW2/install/lib
-
-# PRESTO
-ENV PRESTO=$PSRHOME/presto
-ENV PATH=$PATH:$PRESTO/bin
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PRESTO/lib
-ENV PYTHONPATH=$PYTHONPATH:$PRESTO/lib/python
-
-# Downloading all source codes
-RUN git clone https://github.com/SixByNine/sigproc.git
-RUN git clone https://github.com/scottransom/presto.git
-RUN git clone git://git.code.sf.net/p/tempo/tempo
-RUN mv /home/sigproc /home/psr/soft/sigproc
-RUN mv /home/presto /home/psr/soft/presto
-RUN mv /home/tempo /home/psr/soft/tempo
-RUN cvs -z3 -d:pserver:anonymous@tempo2.cvs.sourceforge.net:/cvsroot/tempo2 co tempo2
-RUN mv /home/tempo2 /home/psr/soft/tempo2
-
-
-##############################################################################################
-# CUDA Drivers
-#
-# This part of the docker file was taken from the Nvidia Github respository, credit goes
-# to the NVIDIA CORPORATION <digits@nvidia.com> for this. Please see the following link
-# for more information: https://github.com/NVIDIA/nvidia-docker
-##############################################################################################
-
-
-
 ##############################################################################################
 # TEST VECTOR PIPELINE + README Setup
 ##############################################################################################
 # Download test vector files
 WORKDIR /home
-RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/DockerImageReadme.txt
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Images/tvg/CentOS/DockerImageReadme.txt
 
 WORKDIR $PSRHOME
 RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/pulsar_injection_pipeline.zip
 RUN unzip pulsar_injection_pipeline.zip -d $PSRHOME
 RUN rm __MACOSX -R
 RUN rm pulsar_injection_pipeline.zip
+
+##############################################################################################
+# PULSAR SOFTWARE PIPELINE
+##############################################################################################
+WORKDIR /home
+
+# Downloading pulsar software source codes. Here I've tried to version the software
+# used, so we know all about our container environment. However some of the pulsar tools
+# are not versioned explcitly. So to make sure we always have the same version of the
+# pulsar tools in each image, versions of the software have been packaged and stored,
+# in my github repository. It is these versions of the software that will be installed
+# each time.
+
+# Download the software
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Presto_SNAPSHOT_08_12_2016.zip
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Sigproc_MJK_SNAPSHOT_08_12_2016.zip
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Tempo_SNAPSHOT_08_12_2016.zip
+RUN wget https://github.com/scienceguyrob/Docker/raw/master/Resources/Deploy/Software/08_12_2016/Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip
+
+# Unzip the software
+RUN unzip Presto_SNAPSHOT_08_12_2016.zip -d /home
+RUN unzip Sigproc_MJK_SNAPSHOT_08_12_2016.zip -d /home
+RUN unzip Tempo_SNAPSHOT_08_12_2016.zip -d /home
+RUN unzip Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip -d /home
+
+# Remove any meta files caused by building zip files on OSX.
+RUN rm __MACOSX -R
+
+# Remove zip files
+RUN rm Presto_SNAPSHOT_08_12_2016.zip
+RUN rm Sigproc_MJK_SNAPSHOT_08_12_2016.zip
+RUN rm Tempo_SNAPSHOT_08_12_2016.zip
+RUN rm Tempo2_2016.11.3_SNAPSHOT_08_12_2016.zip
+
+# Move the software to the correct folder location
+RUN mv /home/Sigproc_MJK_SNAPSHOT_08_12_2016 /home/psr/soft/sigproc
+RUN mv /home/Presto_SNAPSHOT_08_12_2016 /home/psr/soft/presto
+RUN mv /home/Tempo_SNAPSHOT_08_12_2016 /home/psr/soft/tempo
+RUN mv /home/Tempo2_2016.11.3_SNAPSHOT_08_12_2016 /home/psr/soft/tempo2
 
 ##############################################################################################
 # Finally...
