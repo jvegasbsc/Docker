@@ -223,7 +223,7 @@ RUN yum -y update && yum -y install \
     RUN pip install pyephem -U
 
     # First use repo that has PGPLOT
-    RUN yum localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm https://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
+    RUN yum -y localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm https://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
 
     # Install PGPLOT.
     RUN yum -y install pgplot
