@@ -21,6 +21,7 @@
 # dev tools (gfortran etc.)
 # PRESTO is not compiled to reduce docker bloat.
 #
+# Please see DockerImageReadme.txt for software version information.
 ##############################################################################################
 
 # Use well supported distribution.
@@ -156,13 +157,31 @@ RUN yum -y update && yum -y install \
     # DESCRIPTION:
     # FFTW is a C subroutine library for computing the Discrete Fourier Transform (DFT) in
     # one or more dimensions, of both real and complex data, and of arbitrary input size.
-    fftw-devel \
+    fftw-devel
 
     ##########################################################################################
     #
     # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD SIGPROC
     #
     ##########################################################################################
+
+    # X11 required by PRESTO
+    RUN yum -y groupinstall "X11"
+
+
+    RUN yum -y install \
+
+    # X11 libraries
+    libX11-devel \
+
+    # VERSION: 1.5.13
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/libpng-1.5.13-7.el7_2.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # The libpng package contains a library of functions for creating and manipulating
+    # PNG (Portable Network Graphics) image format files.
+    libpng \
+    libpng-devel \
 
     # VERSION: 2.17
     # LINK: https://pkgs.org/centos-7/centos-x86_64/glibc-2.17-105.el7.i686.rpm.html
@@ -172,6 +191,15 @@ RUN yum -y update && yum -y install \
     # on the system.
     glibc \
     glibc-devel \
+
+    # VERSION: 2.46.2
+    # LINK: https://pkgs.org/centos-7/centos-x86_64/glib2-2.46.2-4.el7.i686.rpm.html
+    #
+    # DESCRIPTION:
+    # GLib is the low-level core library that forms the basis for projects such as
+    # GTK+ and GNOME.
+    glib2 \
+    glib2-devel \
 
     # VERSION: 7.1.0
     # LINK: https://pkgs.org/centos-7/epel-x86_64/python-pip-7.1.0-1.el7.noarch.rpm.html
@@ -194,17 +222,17 @@ RUN yum -y update && yum -y install \
     RUN pip install matplotlib -U
     RUN pip install pyephem -U
 
+    # First use repo that has PGPLOT
+    RUN yum localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm https://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
+
+    # Install PGPLOT.
+    RUN yum -y install pgplot
+
     ##########################################################################################
     #
     # ALL THE SOFTWARE LISTED SO FAR IS REQUIRED TO BUILD PRESTO
     #
     ##########################################################################################
-
-##############################################################################################
-# Install software repositories
-##############################################################################################
-
-
 
 ##############################################################################################
 # Setup environment variables
@@ -355,6 +383,19 @@ RUN ./bootstrap && \
     ./configure --prefix=$SIGPROC/install LDFLAGS="-L/home/psr/soft/tempo2/T2runtime/lib" LIBS="-ltempo2" && \
     make && \
     make install
+
+##############################################################################################
+# PRESTO Installation
+##############################################################################################
+WORKDIR $PRESTO/src
+RUN make makewisdom
+RUN make prep && \
+#    make
+#WORKDIR $PRESTO/python/ppgplot_src
+#RUN mv _ppgplot.c _ppgplot.c_ORIGINAL && \
+    #wget https://raw.githubusercontent.com/mserylak/pulsar_docker/master/ppgplot/_ppgplot.c
+#WORKDIR $PRESTO/python
+#RUN make
 
 ##############################################################################################
 # CUDA Drivers

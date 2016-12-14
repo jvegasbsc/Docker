@@ -56,11 +56,23 @@ Latest versions of the pulsar software were obtained on December 8th 2016.
 
 The software can be found in: /home/psr/soft
 
-1. Tempo2
-2. Sigproc (Mike Keith's build)
-3. Test vector generation scripts.
-4. Elmarie van Heerden's code that inserts non-stationary noise and RFI into filterbank files.
-6. Tempo
+Software Package                Version                             Link
+1. Tempo2                       2016.11.3 (SNAPSHOT 08 12 2016)     https://bitbucket.org/psrsoft/tempo2/downloads/tempo2-2016.11.3.tar.gz
+                                Uploaded on 2016-12-05 by MKeith.
+
+2. Sigproc (Mike Keith's build) Latest commit 668de78  on 25 Oct    https://github.com/SixByNine/sigproc
+                                2016 (Master branch)
+
+3. Test vector generation code. Commit 91d8472                      https://github.com/scienceguyrob/Docker/blob/master/Resources/Deploy/pulsar_injection_pipeline.zip
+
+4. Elmarie van Heerden's code that
+   inserts non-stationary noise and
+   RFI into filterbank files.
+
+5. PRESTO                       Commit bd3c0181                     https://github.com/scottransom/presto
+
+6. Tempo                        (Master branch) SNAPSHOT 08 12      https://sourceforge.net/p/tempo/tempo/ci/master/tree/
+                                2016
 
 OTHER SOFTWARE:
 
