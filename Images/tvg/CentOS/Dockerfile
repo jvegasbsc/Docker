@@ -19,7 +19,7 @@
 # python 2.6 (scipy, numpy stacks).
 # fftw 3
 # dev tools (gfortran etc.)
-# PRESTO is not compiled to reduce docker bloat.
+# PRESTO is not compiled due to an error: https://github.com/scottransom/presto/issues/68
 #
 # Please see DockerImageReadme.txt for software version information.
 ##############################################################################################
@@ -299,7 +299,7 @@ RUN rm pulsar_injection_pipeline.zip
 
 RUN mkdir /home/psr/soft/evh
 WORKDIR $PSRHOME/evh
-RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/README.txt
+RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/Readme_For_Ersartz.txt
 RUN wget https://raw.githubusercontent.com/EllieVanH/PulsarDetectionLibrary/master/ersatz.py
 
 ##############################################################################################
@@ -389,7 +389,13 @@ RUN ./bootstrap && \
 ##############################################################################################
 WORKDIR $PRESTO/src
 RUN make makewisdom
-RUN make prep && \
+# Note I have not built PRESTO due to this issue:
+# https://github.com/scottransom/presto/issues/68
+# I can workaround the issue by rmeoving references to the code causing the problem, but I don't
+# believe that to be a sensible solution. Especially as I'm unsure what consequence that would
+# have. So for now I just inlcude the PRESTO prerequisites and the code. You can build this
+# software from inside the docker container if absolutely necessary.
+#RUN make prep && \
 #    make
 #WORKDIR $PRESTO/python/ppgplot_src
 #RUN mv _ppgplot.c _ppgplot.c_ORIGINAL && \
