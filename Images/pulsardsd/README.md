@@ -1,4 +1,4 @@
-# Kern Docker File
+# Pulsar data science Docker File
 This is an image that uses the Kern suite repository. It provides a small data science stack along with pulsar software.
 
 ## Author: Rob Lyon
