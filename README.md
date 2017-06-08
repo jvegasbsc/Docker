@@ -267,4 +267,4 @@ Please be careful mounting volumes, as anything altered in your host folder will
 
 ### License
 
-The code and the contents of this notebook are released under the GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007. We kindly request that if you make use of the notebook, you cite the work appropriately.
+The code and the contents of this notebook are released under the GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007. We kindly request that if you make use of the docker files here, you cite the work appropriately.
