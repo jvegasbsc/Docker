@@ -10,7 +10,7 @@ This repository consists of a whole bunch of docker files, written for a variety
 useful, others not so useful. Right now, there are three main types of image:
 
 * **DSD**: Data science docker (DSD). This image has a basic data science stack that I use for everyday work. 
-* **kern**: This is an image that uses the Kern suite repository. It provides a small data science stack along with pulsar software.
+* **PulsarDSD**: This is an image that uses the Kern suite repository. It provides a small data science stack along with pulsar software.
 * **music**: A data science docker which also contains music analysis software.
 
 ### DSD Docker File
@@ -58,7 +58,7 @@ Image OS: Ubuntu 16.04
 
 Also has a full scipy stack, numpy, matplotlib, jupyter notebooks etc (comes with Anaconda install).
 
-### Kern Docker File
+### Pulsar DSD Docker File
 This is an image that uses the Kern suite repository. It provides a small data science stack along with pulsar software.
 
 #### OS Packages Installed
@@ -238,7 +238,7 @@ DockerImageReadme.txt  psr
 root@3c6064b40e3b:~
 ```
 
-### Running Jupyter (Kern, DSD, Music)
+### Running Jupyter (Pulsar DSD, DSD, Music)
 
 To run jupyter in either the Kern, DSD or music containers, you have to pipe the notebook server output to your host machine.
 
