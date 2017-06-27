@@ -90,7 +90,8 @@ RUN conda install -y \
     numba \
     mkl \
     theano \
-    pygpu
+    pygpu \
+    opencv
 
 # Music tools
 RUN conda config --append channels conda-forge

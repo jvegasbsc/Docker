@@ -1,21 +1,10 @@
-# Docker
-A docker test repository. This is a scratch space for my personal docker tests.
+# DSD GPU Docker File
+This image has a basic data science stack that I use for everyday work. It is a GPU enabled image.
 
 ## Author: Rob Lyon
 ## Email : robert.lyon@manchester.ac.uk
 ## web   : www.scienceguyrob.com
 
-### Overview
-This repository consists of a whole bunch of docker files, written for a variety of purposes. So of these you may find
-useful, others not so useful. Right now, there are three main types of image:
-
-* **DSD**: Data science docker (DSD). This image has a basic data science stack that I use for everyday work. 
-* **PulsarDSD**: This is an image that uses the Kern suite repository. It provides a small data science stack along with pulsar software.
-* **music**: A data science docker which also contains music analysis software.
-
-### DSD Docker File
-This image has a basic data science stack that I use for everyday work. It is a CPU based image, i.e. does not use GPU resources.
- 
 #### OS Packages Installed
 
 Image OS: Ubuntu 16.04
@@ -36,7 +25,7 @@ Image OS: Ubuntu 16.04
 |1.      |  Java 8 (latest)              |
 |2.      |  weka-3-9-1                   |
 |3.      |  Anaconda (2-4.2.0)           |
-|4.      |  Tensorflow (1.1.0, CPU only) |
+|4.      |  Tensorflow (1.1.0, GPU)      |
 
 #### Python Modules (Python 2.7):
 
@@ -55,95 +44,7 @@ Image OS: Ubuntu 16.04
 |11.     | javabridge          |
 |12.     | xgboost             |
 |13.     | python-weka-wrapper |
-
-Also has a full scipy stack, numpy, matplotlib, jupyter notebooks etc (comes with Anaconda install).
-
-### Pulsar DSD Docker File
-This is an image that uses the Kern suite repository. It provides a small data science stack along with pulsar software.
-
-#### OS Packages Installed
-
-Image OS: Ubuntu 16.04, extends kernsuite/base:dev
-  
-| Number |          Package            |
-|--------|-----------------------------|
-|1.      |  wget                       |
-
-#### Non-OS Software:
-  
-| Number |            Package            |
-|--------|-------------------------------|
-|1.      |  Anaconda (2-4.2.0)           |
-
-#### Python Modules (Python 2.7):
-
-Has a full scipy stack, numpy, matplotlib, jupyter notebooks etc (comes with Anaconda install).
-
-#### Pulsar software
-
-Latest versions of the pulsar software.
-
-| Number |            Package            |
-|--------|-------------------------------|
-|1.      |  psrcat                       |
-|2.      |  psrchive                     |
-|3.      |  sigproc                      |
-|4.      |  tempo                        |
-|5.      |  tempo2                       |
-|6.      |  dspsr                        |
-|7.      |  presto                       |
-|8.      |  python-presto                |
-
-### Music Docker File
-A data science docker which also contains music analysis software.
- 
-#### OS Packages Installed
-
-Image OS: Ubuntu 16.04
-  
-| Number |          Package            |
-|--------|-----------------------------|
-|1.      |  build-essential            |
-|2.      |  wget                       |
-|3.      |  unzip                      |
-|4.      |  bzip2                      |
-|5.      |  software-properties-common |
-|6.      |  python-setuptools          |
-|7.      |  libasound-dev              |
-|8.      |  portaudio19-dev            |
-|9.      |  libportaudio2              |
-|10.     |  libportaudiocpp0           |
-|11.     |  ffmpeg                     |
-|12.     |  libav-tools                |
-|13.     |  libavcodec-extra           |
-
-#### Non-OS Software:
-  
-| Number |            Package            |
-|--------|-------------------------------|
-|1.      |  Anaconda (2-4.2.0)           |
-|2.      |  Tensorflow (1.1.0, CPU only) |
-
-#### Python Modules (Python 2.7):
-
-| Number |        Package      |
-|--------| --------------------|
-|1.      | gcc                 |
-|2.      | ephem               |
-|3.      | astropy             |
-|4.      | pip                 |
-|5.      | pandas              |
-|6.      | pillow              |
-|7.      | numba               |
-|8.      | mkl                 |
-|9.      | theano              |
-|10.     | pygpu               |
-|11.     | pydub               |
-|12.     | xgboost             |
-|13.     | ffmpeg              |
-|14.     | librosa             |
-|15.     | pyaudio             |
-|16.     | opencv              |
+|14.     | pytorch             |
 
 Also has a full scipy stack, numpy, matplotlib, jupyter notebooks etc (comes with Anaconda install).
 
@@ -239,7 +140,7 @@ DockerImageReadme.txt  psr
 root@3c6064b40e3b:~
 ```
 
-### Running Jupyter (Pulsar DSD, DSD, Music)
+### Running Jupyter (Kern, DSD, Music)
 
 To run jupyter in either the Kern, DSD or music containers, you have to pipe the notebook server output to your host machine.
 
@@ -268,4 +169,4 @@ Please be careful mounting volumes, as anything altered in your host folder will
 
 ### License
 
-The code and the contents of this notebook are released under the GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007. We kindly request that if you make use of the docker files here, you cite the work appropriately.
+The code and the contents of this notebook are released under the GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007. We kindly request that if you make use of the notebook, you cite the work appropriately.

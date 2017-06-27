@@ -51,6 +51,7 @@ Image OS: Ubuntu 16.04
 |13.     | ffmpeg              |
 |14.     | librosa             |
 |15.     | pyaudio             |
+|16.     | opencv              |
 
 Also has a full scipy stack, numpy, matplotlib, jupyter notebooks etc (comes with Anaconda install).
 

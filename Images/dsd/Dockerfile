@@ -111,10 +111,7 @@ RUN conda install -y \
 RUN conda update scikit-learn
 RUN conda install -c anaconda javabridge -y
 RUN conda update conda
-
-#RUN conda install -c akode xgboost=0.3 -y
 RUN pip install xgboost
-#RUN pip install python-weka-wrapper
 RUN pip install -i https://pypi.anaconda.org/pypi/simple python-weka-wrapper
 
 #####################################################################
